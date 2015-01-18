@@ -30,7 +30,7 @@ project.ext {
         signFiles = <%= bintraySignFiles %> // true to gpg sign files on bintray (certificate must be installed on bintray account)
         gpgPassphrase = project.hasProperty('gpgPassphrase') ? gpgPassphrase : '' // optionally configured in ~/.gradle/gradle.properties if certificate requires it
 
-        mavenCentralSync = <%= mavenCentralSync %> // true to sync with maven central (files signing required)
+        mavenCentralSync = false // true to sync with maven central (files signing required)
         ossUser = project.hasProperty('sonatypeUser') ? sonatypeUser : 'USER' // configured in ~/.gradle/gradle.properties
         ossPassword = project.hasProperty('sonatypePassword') ? sonatypePassword : 'PASSWORD' // configured in ~/.gradle/gradle.properties
     }

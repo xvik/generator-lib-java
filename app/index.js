@@ -25,7 +25,6 @@ var questions = [
     'bintrayUser',          // bintray user name
     'bintrayRepo',          // target bintray maven repository name
     'bintraySignFiles',    // true if files signing enabled
-    'mavenCentralSync',    // true if files signing enabled
     'enableQualityChecks'  // true if quality checks enabled
 ];
 
@@ -272,15 +271,6 @@ module.exports = yeoman.generators.Base.extend({
                 },
                 {
                     type: 'confirm',
-                    name: 'mavenCentralSync',
-                    message: 'Should bintray sync with maven central on release (jars must be signed!)?',
-                    when: function (props) {
-                        return !!props.bintraySignFiles;
-                    },
-                    default: this.mavenCentralSync || true
-                },
-                {
-                    type: 'confirm',
                     name: 'enableQualityChecks',
                     message: 'Enable code quality checks (pmd, checkstyle, findbugs)?',
                     default: this.enableQualityChecks || true
@@ -382,7 +372,7 @@ module.exports = yeoman.generators.Base.extend({
         checkGradleConfig: function () {
             var conf = this.context.gradleConf;
             var bintrayCfg = true;
-            var sonatypeCfg = this.mavenCentralSync;
+            var sonatypeCfg = this.bintraySignFiles;
             if (conf) {
                 bintrayCfg = !conf.bintrayUser;
                 sonatypeCfg = sonatypeCfg && !conf.sonatypeUser;
@@ -403,6 +393,7 @@ module.exports = yeoman.generators.Base.extend({
                 }
                 if (sonatypeCfg) {
                     this.log();
+                    this.log('If you going to automatically sync with maven central, you need to configure sonatype user:')
                     this.log(chalk.yellow('sonatypeUser') + '=<sonatype user>');
                     this.log(chalk.yellow('sonatypePassword') + '=<sonatype password>');
                 }

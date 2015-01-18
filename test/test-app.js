@@ -35,7 +35,6 @@ describe('lib-java generator', function () {
                 bintrayUser: 'john',
                 bintrayRepo: 'mvn',
                 bintraySignFiles: true,
-                mavenCentralSync: true,
                 enableQualityChecks: true
             })
             .on('end', done);
