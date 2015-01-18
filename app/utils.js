@@ -54,6 +54,8 @@ _.extend(Helper.prototype, {
             properties.parse(filePath, {path: true}, function (error, obj) {
                 cb(error ? null : obj);
             });
+        } else {
+            cb(null);
         }
     },
 
