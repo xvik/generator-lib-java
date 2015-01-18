@@ -19,7 +19,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "mocha --timeout 20000"
+    "test": "mocha"
   },
   "files": [
     "app"

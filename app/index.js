@@ -45,6 +45,7 @@ module.exports = yeoman.generators.Base.extend({
 
     initializing: {
         initConfig: function () {
+            console.log('initConfig');
             // if all questions answered no need to ask again
             var context = this.context = {
                 allAnswered: true,
@@ -64,11 +65,13 @@ module.exports = yeoman.generators.Base.extend({
         },
 
         initGeneratorVersions: function () {
+            console.log('initGeneratorVersions');
             this.context.usedGeneratorVersion = this.config.get('usedGeneratorVersion');
             this.context.pkg = require('../package.json');
         },
 
         initDateVars: function () {
+            console.log('initDateVars');
             // init date variables for templates
             var d = new Date();
             var month = d.getMonth() + 1;
@@ -80,6 +83,7 @@ module.exports = yeoman.generators.Base.extend({
         },
 
         readGradleConfig: function () {
+            console.log('readGradleConfig');
             var done = this.async();
             this.context.gradleConfPath = this.helper.homePath('.gradle/gradle.properties');
             this.helper.readProperties(this.context.gradleConfPath, function (res) {
@@ -91,6 +95,7 @@ module.exports = yeoman.generators.Base.extend({
 
     prompting: {
         greeting: function () {
+            console.log('greeting');
             this.log(chalk.yellow(this.helper.banner(this.templatePath('banner.txt'))));
             this.log('                                      v.' + chalk.green(this.context.pkg.version));
             this.log();
@@ -107,8 +112,10 @@ module.exports = yeoman.generators.Base.extend({
         },
 
         askForGithub: function () {
+            console.log('askForGithub');
             var options = this.options;
             if (!options.ask && this.context.allAnswered) {
+                console.log('askForGithub noask');
                 return;
             }
 
@@ -177,6 +184,7 @@ module.exports = yeoman.generators.Base.extend({
         askForLibName: function () {
             if (this.context.updateMode) {
                 // update must be started from project folder - no need to ask for name
+                console.log('askForLibName noask');
                 return;
             }
 
@@ -199,7 +207,9 @@ module.exports = yeoman.generators.Base.extend({
         },
 
         other: function () {
+            console.log('other');
             if (this.context.allAnswered && !this.options.ask) {
+                console.log('other noask');
                 return;
             }
 
@@ -292,6 +302,7 @@ module.exports = yeoman.generators.Base.extend({
 
     configuring: {
         enforceFolderName: function () {
+            console.log('enforceFolderName');
             if (this.appname !== _.last(this.destinationRoot().split(path.sep))) {
                 this.destinationRoot(this.appname);
             }
@@ -299,6 +310,7 @@ module.exports = yeoman.generators.Base.extend({
         },
 
         updateConfig: function () {
+            console.log('updateConfig');
             var that = this;
             questions.forEach(function (name) {
                 that.config.set(name, that[name]);
@@ -308,6 +320,7 @@ module.exports = yeoman.generators.Base.extend({
         },
 
         selectJavaVersion: function () {
+            console.log('selectJavaVersion');
             var signature = {
                 '1.6': 'org.codehaus.mojo.signature:java16-sun:+@signature',
                 '1.7': 'org.codehaus.mojo.signature:java17:+@signature',
@@ -325,6 +338,7 @@ module.exports = yeoman.generators.Base.extend({
 
     writing: {
         base: function () {
+            console.log('base');
             var writeOnceFiles = [
                 'gradlew',
                 'gradlew.bat',
@@ -356,6 +370,7 @@ module.exports = yeoman.generators.Base.extend({
         },
 
         sources: function () {
+            console.log('sources');
             if (!this.helper.exists('src/main')) {
                 var packageFolder = this.libPackage.replace(/\./g, '/');
                 this.helper.copyTpl('sources', {
@@ -370,6 +385,7 @@ module.exports = yeoman.generators.Base.extend({
 
     end: {
         checkGradleConfig: function () {
+            console.log('checkGradleConfig');
             var conf = this.context.gradleConf;
             var bintrayCfg = true;
             var sonatypeCfg = this.bintraySignFiles;
