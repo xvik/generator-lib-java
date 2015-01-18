@@ -113,7 +113,7 @@ module.exports = yeoman.generators.Base.extend({
             }
 
             var done = this.async(),
-                globalConfig = this._globalConfig.get('promptValues'),
+                globalConfig = this._globalConfig.get('promptValues') || {},
                 hasAllGlobal = globalConfig.githubUser && globalConfig.authorName && globalConfig.authorEmail,
                 hasAllLocal = this.githubUser && this.authorName && this.authorEmail,
             // no need to call github if all data available

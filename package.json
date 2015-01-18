@@ -46,8 +46,7 @@
   "devDependencies": {
     "fs-readdir-recursive": "^0.1.0",
     "mocha": "*",
-    "mocha-jshint": "0.0.9",
-    "recursive-readdir": "^1.2.1"
+    "mocha-jshint": "0.0.9"
   },
   "peerDependencies": {
     "yo": ">=1.0.0"

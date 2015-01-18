@@ -3,12 +3,11 @@
 var path = require('path');
 var assert = require('yeoman-generator').assert;
 var helpers = require('yeoman-generator').test;
-var os = require('os');
 var read = require('fs-readdir-recursive');
 
 describe('lib-java generator', function () {
     var appPath = path.join(__dirname, '../app');
-    var targetPath = path.join(os.tmpdir(), './temp-test');
+    var targetPath = path.join(__dirname, './temp');
 
     function dotfile(file) {
         return file.replace(/^_|\/_|\\_/, '/.').replace(/^\//, '')
