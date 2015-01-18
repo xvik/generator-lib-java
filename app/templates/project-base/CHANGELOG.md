@@ -1,0 +1,3 @@
+### <%= libVersion %> (<%= reverseDate %>)
+
+* Initial release

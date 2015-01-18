@@ -1,0 +1,17 @@
+language: java
+jdk:
+  - <%= travisJdk %>
+env:
+  - TERM=dumb
+
+before_install:
+  - chmod +x gradlew
+
+install:
+  - ./gradlew assemble
+
+script:
+  - ./gradlew check
+
+after_success:
+  - ./gradlew jacocoTestReport coveralls
