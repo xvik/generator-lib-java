@@ -393,7 +393,7 @@ module.exports = yeoman.generators.Base.extend({
                 }
                 if (sonatypeCfg) {
                     this.log();
-                    this.log('If you going to automatically sync with maven central, you need to configure sonatype user:')
+                    this.log('If you going to automatically sync with maven central, you need to configure sonatype user:');
                     this.log(chalk.yellow('sonatypeUser') + '=<sonatype user>');
                     this.log(chalk.yellow('sonatypePassword') + '=<sonatype password>');
                 }
