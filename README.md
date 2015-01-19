@@ -122,7 +122,7 @@ Project setup ready, start coding!
 
 #### Build upgrade
 
-If generator started in folder with already generator project - it will work in update mode.
+If generator started in folder with already generated project - it will work in update mode.
 This will allow you to easily update existing build with new generator version.
 
 Update mode skips some files to reduce update to only meaningful files (e.g. no need to update CHANGELOG.md, gradle.properties etc).
@@ -231,7 +231,7 @@ Used gradle plugins:
 * [pmd](http://www.gradle.org/docs/current/userguide/pmd_plugin.html) to check code quality with [PMD](http://pmd.sourceforge.net/) tool
 * [checkstyle](http://www.gradle.org/docs/current/userguide/checkstyle_plugin.html) to check code style rules with [checkstyle](http://checkstyle.sourceforge.net/index.html)
 * [findbugs](http://www.gradle.org/docs/current/userguide/findbugs_plugin.html) to find potential bugs with [findbugs](http://findbugs.sourceforge.net/)
-* [be.insaneprogramming.gradle.animalsniffer](https://bitbucket.org/lievendoclo/animalsniffer-gradle-plugin) to verify jdk backwards compatibility (1.6) when building on newer jdk (1.7, 1.8)
+* [be.insaneprogramming.gradle.animalsniffer](https://bitbucket.org/lievendoclo/animalsniffer-gradle-plugin) to verify jdk backwards compatibility when building on newer jdk
 * [release](https://github.com/townsfolk/gradle-release) for release (see [article](http://www.sosaywecode.com/gradle-release-plugin/) for additional plugin details)
 
 #### Java compatibility
@@ -240,16 +240,15 @@ I prefer to use more recent jdk for build because recent checkstyle and findbugs
 could be used in tests. But it's better for resulted library is be compatible with older jdk's.
 
 To do compatibility we use target jvm flag (to get correct class file version) and animalsniffer plugin to
-guarantee we havn't used any recent api in project (not available in older jdk).
+guarantee that we havn't used any recent api in project (not available in older jdk).
 
-See build config section:
+See build config section in `build.gradle`:
 
 ```groovy
     build = {
-        gradle = 2.1
+        ...
         java = 1.6
         signature = 'org.codehaus.mojo.signature:java16-sun:+@signature'
-    }
 ```
 
 `java` option defines target and source java compiler options.
@@ -264,7 +263,7 @@ and issue will be resolved (issue occur because of IDE).
 
 ### Quality tools
 
-Quality tools are configured in `/gradle/quality.gradle`. Tools configuration files could be found in `/gradle/config/*`.
+Quality tools are configured in `gradle/quality.gradle`. Tools configuration files could be found in `gradle/config/*`.
 
 All quality plugins are configured to fail build. All found issues are printed to console with description, so most of the time
 console output is enough to understand and fix problem.
@@ -400,6 +399,7 @@ Now automatic maven central publication could be enabled in project config `buil
 project.ext {
     ...
     bintray = {
+        ...
         mavenCentralSync = true
 ```
 

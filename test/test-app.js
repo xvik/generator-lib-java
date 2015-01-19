@@ -1,14 +1,14 @@
 'use strict';
 
-var path = require('path');
-var assert = require('yeoman-generator').assert;
-var helpers = require('yeoman-generator').test;
-var read = require('fs-readdir-recursive');
-var exec = require('exec');
+var path = require('path'),
+    assert = require('yeoman-generator').assert,
+    helpers = require('yeoman-generator').test,
+    read = require('fs-readdir-recursive'),
+    exec = require('exec');
 
 describe('lib-java generator', function () {
-    var appPath = path.join(__dirname, '../app');
-    var targetPath = path.join(__dirname, 'temp');
+    var appPath = path.join(__dirname, '../app'),
+        targetPath = path.join(__dirname, 'temp');
 
     function dotfile(file) {
         return file.replace(/^_|\/_|\\_/, '/.').replace(/^\//, '')

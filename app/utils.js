@@ -6,7 +6,8 @@ var url = require('url'),
     fs = require('fs'),
     _s = require('underscore.string'),
     detectConflict = require('detect-conflict'),
-    chalk = require('chalk');
+    chalk = require('chalk'),
+    Insight = require('insight');
 
 function Helper(gen) {
     this.$ = gen;
@@ -33,6 +34,13 @@ _.extend(Helper.prototype, {
 
         var GitHubApi = require('github');
         return new GitHubApi(githubOptions);
+    },
+
+    initInsight: function (pkg) {
+        return new Insight({
+            trackingCode: 'UA-58691064-1',
+            pkg: pkg
+        });
     },
 
     twoDigits: function (num) {
