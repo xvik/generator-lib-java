@@ -4,6 +4,7 @@ var path = require('path');
 var assert = require('yeoman-generator').assert;
 var helpers = require('yeoman-generator').test;
 var read = require('fs-readdir-recursive');
+var exec = require('exec');
 
 describe('lib-java generator', function () {
     var appPath = path.join(__dirname, '../app');
@@ -12,6 +13,7 @@ describe('lib-java generator', function () {
     function dotfile(file) {
         return file.replace(/^_|\/_|\\_/, '/.').replace(/^\//, '')
     }
+
     function repackage(file) {
         return file.replace(/(^|\/|\\)package(\/|\\|$)/, '$1com/johnd/testlib$2')
     }
@@ -43,5 +45,16 @@ describe('lib-java generator', function () {
         assert.file(read(appPath + '/templates/gradle-base'));
         assert.file(read(appPath + '/templates/project-base').map(dotfile));
         assert.file(read(appPath + '/templates/sources').map(dotfile).map(repackage));
+    });
+
+    it('creates valid project', function (done) {
+        this.timeout(30000);
+        exec([targetPath + '/testlib/gradlew' + (/^win/.test(process.platform) ? '.bat' : ''), 'check'], function (err, out, code) {
+            if (err instanceof Error)
+                throw err;
+            process.stderr.write(err);
+            process.stdout.write(out);
+            done();
+        });
     });
 });

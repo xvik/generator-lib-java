@@ -272,7 +272,7 @@ module.exports = yeoman.generators.Base.extend({
                 {
                     type: 'confirm',
                     name: 'enableQualityChecks',
-                    message: 'Enable code quality checks (pmd, checkstyle, findbugs)?',
+                    message: 'Enable code quality checks (checkstyle, pmd, findbugs)?',
                     default: this.enableQualityChecks || true
                 }
             ];
@@ -308,7 +308,6 @@ module.exports = yeoman.generators.Base.extend({
         },
 
         selectJavaVersion: function () {
-            console.log('selectJavaVersion');
             var signature = {
                 '1.6': 'org.codehaus.mojo.signature:java16-sun:+@signature',
                 '1.7': 'org.codehaus.mojo.signature:java17:+@signature',

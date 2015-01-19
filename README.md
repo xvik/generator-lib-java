@@ -18,9 +18,9 @@ Features:
 * [Bintray](https://bintray.com/) publication (+ jars signing and maven central publishing)
 * [Travis-ci](https://travis-ci.org/) integration (CI and healthy badge)
 * [Coveralls](http://coveralls.io/) integration (code coverage badge)
-* Target jdk compatibility check with [animal sniffer](http://mojo.codehaus.org/animal-sniffer/) (project configured for 1.6 compatibility, while you may use any jdk to build)
-* Code quality checks (pmd, checkstyle, findbugs)
-* Release process (like maven release)
+* Target jdk compatibility check with [animal sniffer](http://mojo.codehaus.org/animal-sniffer/) (you may use newer jdk to build, and keep compatibility with older jdk)
+* Code quality checks ([checkstyle](http://checkstyle.sourceforge.net/), [pmd](http://pmd.sourceforge.net/), [findbugs](http://findbugs.sourceforge.net/))
+* [Release process](https://github.com/townsfolk/gradle-release#introduction) (like maven release)
 
 Requires jdk7 or above.
 
@@ -30,6 +30,8 @@ Requires jdk7 or above.
 * [Juan Roperto](https://github.com/jroperto) for pmd config
 
 ### Example projects
+
+I'm using generator to synchronize builds of projects
 
 * [guice-persist-orient](https://github.com/xvik/guice-persist-orient)
 * [guice-ext-annotations](https://github.com/xvik/guice-ext-annotations)
@@ -264,9 +266,12 @@ and issue will be resolved (issue occur because of IDE).
 
 Quality tools are configured in `/gradle/quality.gradle`. Tools configuration files could be found in `/gradle/config/*`.
 
+All quality plugins are configured to fail build. All found issues are printed to console with description, so most of the time
+console output is enough to understand and fix problem.
+
 #### Checkstyle
 
-[Checkstyle site](http://checkstyle.sourceforge.net/)
+[Checkstyle rules documentation](http://checkstyle.sourceforge.net/availablechecks.html)
 
 To suppress checkstyle warnings (required for some exceptional cases) use `@SuppressWarnings` annotation with
 value composed as `checkstyle:` prefix and lowercased checkstyle check name:
@@ -288,7 +293,7 @@ quality checks).
 
 #### PMD
 
-[PMD site](http://pmd.sourceforge.net/)
+[PMD rules documentation](http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/index.html)
 
 To suppress PMD violation use (in case PMD makes a mistake):
 
@@ -306,7 +311,7 @@ Pmd configuration file: `gradle/config/pmd/pmd.xml`
 
 #### Findbugs
 
-[Findbugs site](http://findbugs.sourceforge.net/)
+[Findbugs detected bugs descriptions](http://findbugs.sourceforge.net/bugDescriptions.html)
 
 To suppress findbugs warnings you can use [exclusion filter](http://findbugs.sourceforge.net/manual/filter.html) (gradle/config/findbugs/exclude.xml).
 Findbug does not support @SuppressWarnings, instead you can use it's own [@SuppressFBWarnings](http://findbugs.sourceforge.net/api/edu/umd/cs/findbugs/annotations/SuppressFBWarnings.html)
