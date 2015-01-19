@@ -373,7 +373,7 @@ module.exports = yeoman.generators.Base.extend({
         chmod: function() {
             // setting executable flag manually
             if (!this.gradlewExists && !/^win/.test(process.platform)) {
-                this.setExecutable('gradlew');
+                this.helper.setExecutable('gradlew');
             }
         },
 
