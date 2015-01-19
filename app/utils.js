@@ -112,7 +112,7 @@ _.extend(Helper.prototype, {
     },
 
     setExecutable: function(filePath) {
-        fs.chownSync(this.$.destinationPath(filePath), '755');
+        fs.chmodSync(this.$.destinationPath(filePath), '755');
     },
 
     /**
