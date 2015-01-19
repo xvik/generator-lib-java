@@ -111,6 +111,10 @@ _.extend(Helper.prototype, {
         return fs.existsSync(this.$.destinationPath(filePath));
     },
 
+    setExecutable: function(filePath) {
+        fs.chownSync(this.$.destinationPath(filePath), '755');
+    },
+
     /**
      * Supported options:
      * glob - glob pattern, by default '**'

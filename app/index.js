@@ -338,6 +338,7 @@ module.exports = yeoman.generators.Base.extend({
                 'build-deps.gradle',
                 'gradle/config/findbugs/exclude.xml'
             ];
+            this.gradlewExists = this.helper.exists('gradlew');
 
 
             // avoid copying jar file due conflict resolution mistake: https://github.com/yeoman/generator/issues/717
@@ -369,6 +370,13 @@ module.exports = yeoman.generators.Base.extend({
     },
 
     end: {
+        chmod: function() {
+            // setting executable flag manually
+            if (!this.gradlewExists && !/^win/.test(process.platform)) {
+                this.setExecutable('gradlew');
+            }
+        },
+
         checkGradleConfig: function () {
             var conf = this.context.gradleConf;
             var bintrayCfg = true;

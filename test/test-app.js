@@ -48,8 +48,10 @@ describe('lib-java generator', function () {
     });
 
     it('creates valid project', function (done) {
-        this.timeout(30000);
-        exec([targetPath + '/testlib/gradlew' + (/^win/.test(process.platform) ? '.bat' : ''), 'check'], function (err, out, code) {
+        this.timeout(300000); //5 min should be enough to download everything
+        var isWin = /^win/.test(process.platform),
+            targetFile = targetPath + '/testlib/gradlew' + (isWin ? '.bat' : '');
+        exec([targetFile, 'check'], function (err, out, code) {
             if (err instanceof Error)
                 throw err;
             process.stderr.write(err);
