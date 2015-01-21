@@ -118,6 +118,10 @@ Generator calls github to validate user correctness and suggest your name and em
 $ yo lib-java --offline
 ```
 
+NOTE: even if you chose syncing with maven central, build.gradle will contain false on initial generation, because
+it's impossible to use it on first release (package needs to be added to jcenter). See release section for more details.
+Anyway your answer will be stored and on update (next generation) correct value will be set to config.
+
 Project setup ready, start coding!
 
 #### Build upgrade
@@ -130,6 +134,13 @@ Update will use previous answers by default.
 
 Start update without local changes and after generation look git changes and correct
 (usually only main build.gradle requires modifications after update).
+
+#### Global storage
+
+Some answers most likely will be the same for all libraries, that's why some answers are stored in global config and
+you will see more precise defaults on next generation.
+
+Global config stored in `~/.config/configstore/generator-lib-java.yml`
 
 ### External services
 
