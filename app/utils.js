@@ -76,6 +76,19 @@ _.extend(Helper.prototype, {
     },
 
     /**
+     * Resolves correct default value to use in prompt.
+     * Checks: stored answers, global answers, provided default
+     * @param name property key
+     * @param value default value
+     * @return default value
+     */
+    defaultValue: function(name, value) {
+        var globalConfig = this.$._globalConfig.get('promptValues') || {};
+        var localConfigValue = this.$.config.get(name);
+        return localConfigValue || globalConfig[name] || value;
+    },
+
+    /**
      * Checks if global setting contradict with value stored in local config.
      * If they are different and we mark prompt as store:true, then yo will show global value
      * and not the one from local config, which is wrong
@@ -83,11 +96,11 @@ _.extend(Helper.prototype, {
      * @return true if store can be used, false otherwise
      */
     canUseGlobalStore: function (name) {
-        var globalConfig = this.$._globalConfig.get('promptValues');
+        var globalConfig = this.$._globalConfig.get('promptValues') || {};
         var localConfigValue = this.$.config.get(name);
         // no global config or no local value or values are the same in both configs
-        return !globalConfig || _.isUndefined(globalConfig[name]) ||
-            (!_.isUndefined(localConfigValue) && globalConfig[name] === localConfigValue);
+        return  _.isUndefined(globalConfig[name]) || _.isUndefined(localConfigValue) ||
+            globalConfig[name] === localConfigValue;
     },
 
     validatePackageFn: function (pkg) {

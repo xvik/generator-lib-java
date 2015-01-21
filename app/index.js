@@ -100,7 +100,7 @@ module.exports = yeoman.generators.Base.extend({
             if (this.context.updateMode) {
                 this.log(printf('Updating library %s, generated with v.%s',
                     chalk.red(this.libName), chalk.green(this.context.usedGeneratorVersion)));
-                if (this.context.allAnswered) {
+                if (this.context.allAnswered && !this.options.ask) {
                     this.log();
                     this.log('Using stored answers from .yo-rc.json. \n' +
                     'If you need to re-run questions use --ask generator option.');
@@ -122,21 +122,15 @@ module.exports = yeoman.generators.Base.extend({
             }
 
             var done = this.async(),
-                globalConfig = this._globalConfig.get('promptValues') || {},
-                hasAllGlobal = globalConfig.githubUser && globalConfig.authorName && globalConfig.authorEmail,
-                hasAllLocal = this.githubUser && this.authorName && this.authorEmail,
-            // no need to call github if all data available
-                noGithubNeed = options.offline || (this.context.updateMode && (hasAllLocal || hasAllGlobal)),
-                github = noGithubNeed ? null : this.helper.initGithubApi(),
+                github = options.offline ? null : this.helper.initGithubApi(),
                 githubData = {};
-
             var prompts = [{
                 name: 'githubUser', message: 'GitHub user name', store: this.helper.canUseGlobalStore('githubUser'),
-                default: this.githubUser,
+                default: this.helper.defaultValue('githubUser'),
                 validate: function (input) {
                     var done = this.async();
-                    if (noGithubNeed) {
-                        done(true);
+                    if (!github) {
+                        done(!input ? 'Github user required' : true);
                     } else {
                         github.user.getFrom({
                             user: input
@@ -157,19 +151,24 @@ module.exports = yeoman.generators.Base.extend({
                     type: 'input',
                     name: 'authorName',
                     message: 'Author name',
-                    store: this.helper.canUseGlobalStore('authorName'),
                     default: function () {
-                        return githubData.name || this.authorName;
-                    }.bind(this)
+                        return githubData.name || this.helper.defaultValue('authorName');
+                    }.bind(this),
+                    validate: function (input) {
+                        return !input ? 'Author name required' : true;
+                    }
+
                 },
                 {
                     type: 'input',
                     name: 'authorEmail',
                     message: 'Author email',
-                    store: this.helper.canUseGlobalStore('authorEmail'),
                     default: function () {
-                        return githubData.email || this.authorEmail;
-                    }.bind(this)
+                        return githubData.email || this.helper.defaultValue('authorEmail');
+                    }.bind(this),
+                    validate: function (input) {
+                        return !input ? 'Author email required' : true;
+                    }
                 }
             ];
 
@@ -212,7 +211,10 @@ module.exports = yeoman.generators.Base.extend({
                 return;
             }
 
-            var done = this.async();
+            var done = this.async(),
+                disableOnUpdate = function () {
+                    return !this.context.updateMode;
+                }.bind(this);
 
             var prompts = [
                 {
@@ -221,14 +223,14 @@ module.exports = yeoman.generators.Base.extend({
                     message: 'Maven artifact group',
                     validate: this.helper.validatePackageFn,
                     store: this.helper.canUseGlobalStore('libGroup'),
-                    default: this.libGroup || 'com.mycompany'
+                    default: this.helper.defaultValue('libGroup', 'com.mycompany')
                 },
                 {
                     type: 'input',
                     name: 'libPackage',
                     message: 'Base package',
                     validate: this.helper.validatePackageFn,
-                    when: !this.context.updateMode,
+                    when: disableOnUpdate,
                     default: function (props) {
                         return this.libPackage || props.libGroup + '.' + this.libName;
                     }.bind(this)
@@ -239,7 +241,7 @@ module.exports = yeoman.generators.Base.extend({
                     name: 'libVersion',
                     message: 'Version',
                     default: '0.1.0',
-                    when: !this.context.updateMode
+                    when: disableOnUpdate
                 },
                 {
                     type: 'list',
@@ -263,14 +265,20 @@ module.exports = yeoman.generators.Base.extend({
                     name: 'bintrayUser',
                     message: 'Bintray user name (used for badge generation only)',
                     store: this.helper.canUseGlobalStore('bintrayUser'),
-                    default: this.bintrayUser
+                    default: this.helper.defaultValue('bintrayUser'),
+                    validate: function (input) {
+                        return !input ? 'Bintray user name required' : true;
+                    }
                 },
                 {
                     type: 'input',
                     name: 'bintrayRepo',
                     message: 'Bintray maven repository name',
                     store: this.helper.canUseGlobalStore('bintrayRepo'),
-                    default: this.bintrayRepo
+                    default: this.helper.defaultValue('bintrayRepo'),
+                    validate: function (input) {
+                        return !input ? 'Bintray repository name required' : true;
+                    }
                 },
                 {
                     type: 'confirm',
@@ -293,7 +301,7 @@ module.exports = yeoman.generators.Base.extend({
                         that[name] = props[name];
                     }
                 });
-
+                this.log();
                 done();
             }.bind(this));
         }
