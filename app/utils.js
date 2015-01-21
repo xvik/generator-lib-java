@@ -1,7 +1,9 @@
 'use strict';
 var url = require('url'),
     _ = require('lodash'),
+    userHome = require('user-home'),
     path = require('path'),
+    Configstore = require('configstore'),
     properties = require('properties'),
     fs = require('fs'),
     _s = require('underscore.string'),
@@ -11,6 +13,7 @@ var url = require('url'),
 
 function Helper(gen) {
     this.$ = gen;
+    this.globalConfig = new Configstore(require('../package.json').name);
 }
 
 _.extend(Helper.prototype, {
@@ -48,12 +51,8 @@ _.extend(Helper.prototype, {
     },
 
     homePath: function (filePath) {
-        var targetPath = filePath || '';
-        if (targetPath.indexOf('/') !== 0) {
-            targetPath = '/' + targetPath;
-        }
-        var homeDir = process.env.HOME || process.env.USERPROFILE || process.env.HOMEPATH,
-            configFile = homeDir + targetPath;
+        var targetPath = filePath;
+        var configFile = targetPath ? path.join(userHome, targetPath) : userHome;
         return path.normalize(configFile);
     },
 
@@ -82,25 +81,13 @@ _.extend(Helper.prototype, {
      * @param value default value
      * @return default value
      */
-    defaultValue: function(name, value) {
-        var globalConfig = this.$._globalConfig.get('promptValues') || {};
+    defaultValue: function (name, value) {
         var localConfigValue = this.$.config.get(name);
-        return localConfigValue || globalConfig[name] || value;
+        return localConfigValue || this.globalConfig.get(name) || value;
     },
 
-    /**
-     * Checks if global setting contradict with value stored in local config.
-     * If they are different and we mark prompt as store:true, then yo will show global value
-     * and not the one from local config, which is wrong
-     * @param name config property
-     * @return true if store can be used, false otherwise
-     */
-    canUseGlobalStore: function (name) {
-        var globalConfig = this.$._globalConfig.get('promptValues') || {};
-        var localConfigValue = this.$.config.get(name);
-        // no global config or no local value or values are the same in both configs
-        return  _.isUndefined(globalConfig[name]) || _.isUndefined(localConfigValue) ||
-            globalConfig[name] === localConfigValue;
+    storeGlobal: function (name, value) {
+        this.globalConfig.set(name, value);
     },
 
     validatePackageFn: function (pkg) {
@@ -132,7 +119,7 @@ _.extend(Helper.prototype, {
         return fs.existsSync(this.$.destinationPath(filePath));
     },
 
-    setExecutable: function(filePath) {
+    setExecutable: function (filePath) {
         fs.chmodSync(this.$.destinationPath(filePath), '755');
     },
 

@@ -4,7 +4,6 @@ var yeoman = require('yeoman-generator'),
     chalk = require('chalk'),
     path = require('path'),
     _ = require('lodash'),
-    _s = require('underscore.string'),
     Helper = require('./utils'),
     printf = require('sprintf');
 
@@ -25,7 +24,17 @@ var questions = [
     'bintrayUser',          // bintray user name
     'bintrayRepo',          // target bintray maven repository name
     'bintraySignFiles',    // true if files signing enabled
+    'mavenCentralSync',    // true to sync with maven central (must be false on first release)
     'enableQualityChecks'  // true if quality checks enabled
+];
+
+var globals = [
+    'githubUser',
+    'authorName',
+    'authorEmail',
+    'libGroup',
+    'bintrayUser',
+    'bintrayRepo'
 ];
 
 
@@ -35,12 +44,18 @@ module.exports = yeoman.generators.Base.extend({
         yeoman.generators.Base.apply(this, arguments);
         this.helper = new Helper(this);
 
-        this.option('offline', {desc: 'Disables github user lookup', type: Boolean, defaults: false});
+        this.option('offline', {
+            desc: 'Disables github user lookup and analytics send',
+            type: Boolean,
+            defaults: false
+        });
         this.option('ask', {
             desc: 'Force questions even all answers available (during project update)',
             type: Boolean,
             defaults: false
         });
+        // yeoman replace '-' with space ???!
+        this.appname = this.helper.folderName(this.appname);
     },
 
     initializing: {
@@ -99,7 +114,7 @@ module.exports = yeoman.generators.Base.extend({
             this.log();
             if (this.context.updateMode) {
                 this.log(printf('Updating library %s, generated with v.%s',
-                    chalk.red(this.libName), chalk.green(this.context.usedGeneratorVersion)));
+                    chalk.red(this.appname), chalk.green(this.context.usedGeneratorVersion)));
                 if (this.context.allAnswered && !this.options.ask) {
                     this.log();
                     this.log('Using stored answers from .yo-rc.json. \n' +
@@ -110,7 +125,7 @@ module.exports = yeoman.generators.Base.extend({
         },
 
         askInsight: function () {
-            if (this.context.insight && this.context.insight.optOut === undefined) {
+            if (this.context.insight && _.isUndefined(this.context.insight.optOut)) {
                 return this.context.insight.askPermission(null, this.async());
             }
         },
@@ -125,7 +140,7 @@ module.exports = yeoman.generators.Base.extend({
                 github = options.offline ? null : this.helper.initGithubApi(),
                 githubData = {};
             var prompts = [{
-                name: 'githubUser', message: 'GitHub user name', store: this.helper.canUseGlobalStore('githubUser'),
+                name: 'githubUser', message: 'GitHub user name',
                 default: this.helper.defaultValue('githubUser'),
                 validate: function (input) {
                     var done = this.async();
@@ -174,8 +189,9 @@ module.exports = yeoman.generators.Base.extend({
 
             this.prompt(prompts, function (props) {
                 questions.forEach(function (name) {
-                    if (!_.isUndefined(props[name])) {
-                        this[name] = props[name];
+                    var value = props[name];
+                    if (!_.isUndefined(value)) {
+                        this[name] = value;
                     }
                 }.bind(this));
                 done();
@@ -222,7 +238,6 @@ module.exports = yeoman.generators.Base.extend({
                     name: 'libGroup',
                     message: 'Maven artifact group',
                     validate: this.helper.validatePackageFn,
-                    store: this.helper.canUseGlobalStore('libGroup'),
                     default: this.helper.defaultValue('libGroup', 'com.mycompany')
                 },
                 {
@@ -232,7 +247,7 @@ module.exports = yeoman.generators.Base.extend({
                     validate: this.helper.validatePackageFn,
                     when: disableOnUpdate,
                     default: function (props) {
-                        return this.libPackage || props.libGroup + '.' + this.libName;
+                        return this.libPackage || props.libGroup + '.' + this.libName.replace(/(\s+|-|_)/g, '.');
                     }.bind(this)
                 },
                 {type: 'input', name: 'libDesc', message: 'Description', default: this.libDesc},
@@ -264,7 +279,6 @@ module.exports = yeoman.generators.Base.extend({
                     type: 'input',
                     name: 'bintrayUser',
                     message: 'Bintray user name (used for badge generation only)',
-                    store: this.helper.canUseGlobalStore('bintrayUser'),
                     default: this.helper.defaultValue('bintrayUser'),
                     validate: function (input) {
                         return !input ? 'Bintray user name required' : true;
@@ -274,7 +288,6 @@ module.exports = yeoman.generators.Base.extend({
                     type: 'input',
                     name: 'bintrayRepo',
                     message: 'Bintray maven repository name',
-                    store: this.helper.canUseGlobalStore('bintrayRepo'),
                     default: this.helper.defaultValue('bintrayRepo'),
                     validate: function (input) {
                         return !input ? 'Bintray repository name required' : true;
@@ -288,6 +301,15 @@ module.exports = yeoman.generators.Base.extend({
                 },
                 {
                     type: 'confirm',
+                    name: 'mavenCentralSync',
+                    message: 'Should bintray publish to maven central on release?',
+                    default: this.mavenCentralSync || true,
+                    when: function (props) {
+                        return props.bintraySignFiles;
+                    }
+                },
+                {
+                    type: 'confirm',
                     name: 'enableQualityChecks',
                     message: 'Enable code quality checks (checkstyle, pmd, findbugs)?',
                     default: this.enableQualityChecks || true
@@ -295,12 +317,12 @@ module.exports = yeoman.generators.Base.extend({
             ];
 
             this.prompt(prompts, function (props) {
-                var that = this;
                 questions.forEach(function (name) {
-                    if (!_.isUndefined(props[name])) {
-                        that[name] = props[name];
+                    var value = props[name];
+                    if (!_.isUndefined(value)) {
+                        this[name] = value;
                     }
-                });
+                }.bind(this));
                 this.log();
                 done();
             }.bind(this));
@@ -314,6 +336,7 @@ module.exports = yeoman.generators.Base.extend({
                 insight.track(this.context.updateMode ? 'update' : 'create');
                 insight.track('targetJava', this.targetJava);
                 insight.track('bintraySign', this.bintraySignFiles);
+                insight.track('mavenCentralSync', this.mavenCentralSync);
                 insight.track('qualityChecks', this.enableQualityChecks);
             }
         },
@@ -326,12 +349,18 @@ module.exports = yeoman.generators.Base.extend({
         },
 
         updateConfig: function () {
-            var that = this;
             questions.forEach(function (name) {
-                that.config.set(name, that[name]);
-            });
+                this.config.set(name, this[name]);
+                if (_.contains(globals, name)){
+                    this.helper.storeGlobal(name, this[name]);
+                }
+            }.bind(this));
+            // synchronization with maven central is impossible on first release, but later
+            // it must be set to true (if required)
+            // so always set it as false on initial generation
+            this.mavenCentralSync = this.context.updateMode && this.mavenCentralSync;
             this.config.set('usedGeneratorVersion', this.context.pkg.version);
-            this.libTags = _s.words(this.libTags);
+            this.libTags = this.libTags.split(/\s*,\s*/);
         },
 
         selectJavaVersion: function () {
@@ -432,6 +461,15 @@ module.exports = yeoman.generators.Base.extend({
                     this.log(chalk.yellow('sonatypeUser') + '=<sonatype user>');
                     this.log(chalk.yellow('sonatypePassword') + '=<sonatype password>');
                 }
+            }
+        },
+
+        mavenCentralNotice: function () {
+            if (!this.context.updateMode && this.config.get('mavenCentralSync')) {
+                this.log();
+                this.log(chalk.red('IMPORTANT') + ' Maven central sync is impossible on first release, so ' +
+                'it was set to false in build.gradle (read doc for more details).');
+                this.log('Anyway your answer remembered and will be used on project update.');
             }
         }
     }

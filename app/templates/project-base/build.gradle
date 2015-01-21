@@ -23,14 +23,14 @@ project.ext {
         user = project.hasProperty('bintrayUser') ? bintrayUser : 'USER' // configured in ~/.gradle/gradle.properties
         key = project.hasProperty('bintrayKey') ? bintrayKey : 'KEY' // configured in ~/.gradle/gradle.properties
         repo = '<%= bintrayRepo %>'
-        tags = [<% _.forEach(libTags, function(tag, i) { %>'<%= tag %>'<%; if (i<libTags.length-1){%>,<%} }); %>]
+        tags = [<% _.forEach(libTags, function(tag, i) { %>'<%= tag %>'<%; if (i<libTags.length-1){%>, <%} }); %>]
         dryRun = false // whether to run this as dry-run, without deploying (TEST RUN)
         publish = true //If version should be auto published after an upload
 
         signFiles = <%= bintraySignFiles %> // true to gpg sign files on bintray (certificate must be installed on bintray account)
         gpgPassphrase = project.hasProperty('gpgPassphrase') ? gpgPassphrase : '' // optionally configured in ~/.gradle/gradle.properties if certificate requires it
 
-        mavenCentralSync = false // true to sync with maven central (files signing required)
+        mavenCentralSync = <%= mavenCentralSync %> // true to sync with maven central (files signing required)
         ossUser = project.hasProperty('sonatypeUser') ? sonatypeUser : 'USER' // configured in ~/.gradle/gradle.properties
         ossPassword = project.hasProperty('sonatypePassword') ? sonatypePassword : 'PASSWORD' // configured in ~/.gradle/gradle.properties
     }
