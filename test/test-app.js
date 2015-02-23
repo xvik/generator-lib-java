@@ -4,7 +4,7 @@ var path = require('path'),
     assert = require('yeoman-generator').assert,
     helpers = require('yeoman-generator').test,
     read = require('fs-readdir-recursive'),
-    exec = require('exec');
+    execFile = require('child_process').execFile;
 
 describe('lib-java generator', function () {
     var appPath = path.join(__dirname, '../app'),
@@ -52,11 +52,11 @@ describe('lib-java generator', function () {
         this.timeout(300000); //5 min should be enough to download everything
         var isWin = /^win/.test(process.platform),
             targetFile = targetPath + '/testlib/gradlew' + (isWin ? '.bat' : '');
-        exec([targetFile, 'check'], function (err, out, code) {
+        execFile(targetFile, ['check'], function (err, stdout, stderr) {
             if (err instanceof Error)
                 throw err;
-            process.stderr.write(err);
-            process.stdout.write(out);
+            console.log(stdout);
+            console.log(stderr);
             done();
         });
     });

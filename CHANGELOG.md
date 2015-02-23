@@ -1,3 +1,8 @@
+### 1.0.2 (2015-02-23)
+
+* Update gradle 2.2.1 -> 2.3
+* Update gradle-versions-plugin 0.7 -> 0.8
+
 ### 1.0.1 (2015-02-12)
 
 * Update gradle-bintray-plugin 1.0 -> 1.1

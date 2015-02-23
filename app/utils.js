@@ -7,7 +7,6 @@ var url = require('url'),
     properties = require('properties'),
     fs = require('fs'),
     _s = require('underscore.string'),
-    detectConflict = require('detect-conflict'),
     chalk = require('chalk'),
     Insight = require('insight');
 
@@ -95,24 +94,6 @@ _.extend(Helper.prototype, {
             return true;
         }
         return 'The package name you have provided is not a valid Java package name.';
-    },
-
-    detectConflict: function (sourcePath, targetPath) {
-        var content = fs.readFileSync(sourcePath);
-        return detectConflict(targetPath, content);
-    },
-
-    bulkChangeCopy: function (sourcePath, targetPath) {
-        var src = this.$.templatePath(sourcePath);
-        var dest = this.$.destinationPath(targetPath);
-        if (!fs.existsSync(dest) || this.detectConflict(src, dest)) {
-            this.$.bulkCopy(
-                src,
-                dest
-            );
-        } else {
-            this.$.log(chalk.cyan('identical ') + dest.substr(this.$.destinationPath().length + 1));
-        }
     },
 
     exists: function (filePath) {

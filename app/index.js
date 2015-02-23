@@ -1,5 +1,7 @@
 'use strict';
 
+// update generator to 1.18.9 or above when new windows inslaller release with updated npm (2.6)
+// because new yeoman 1.4.5 required for proper work
 var yeoman = require('yeoman-generator'),
     chalk = require('chalk'),
     path = require('path'),
@@ -367,7 +369,7 @@ module.exports = yeoman.generators.Base.extend({
             var signature = {
                 '1.6': 'org.codehaus.mojo.signature:java16-sun:+@signature',
                 '1.7': 'org.codehaus.mojo.signature:java17:+@signature',
-                '1.8': '' // switch off animalsniffer for latest java
+                '1.8': '' // switch off animalsniffer for the latest java
             };
             var travis = {
                 '1.6': 'oraclejdk7', // better use oraclejdk, compatibility will be checked with animalsniffer
@@ -396,20 +398,9 @@ module.exports = yeoman.generators.Base.extend({
             ];
             this.gradlewExists = this.helper.exists('gradlew');
 
+            this.helper.copy('gradle-base', {writeOnceFiles: writeOnceFiles});
 
-            // avoid copying jar file due conflict resolution mistake: https://github.com/yeoman/generator/issues/717
-            // (in memory content is wring and so comparison failed). this way jar file avoid any collision checks and gets copied as is each time
-            this.helper.copy('gradle-base',
-                {glob: '**/*[!.jar]', writeOnceFiles: writeOnceFiles});
-
-            // do resolution manually until issue fixed
-            this.helper.bulkChangeCopy(
-                'gradle-base/gradle/wrapper/gradle-wrapper.jar',
-                'gradle/wrapper/gradle-wrapper.jar'
-            );
-
-            this.helper.copyTpl('project-base',
-                {writeOnceFiles: writeOnceFiles});
+            this.helper.copyTpl('project-base', {writeOnceFiles: writeOnceFiles});
         },
 
         sources: function () {
