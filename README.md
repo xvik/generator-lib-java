@@ -14,7 +14,7 @@ Features:
 * [MIT](http://opensource.org/licenses/MIT) license (hardcoded)
 * [Gradle](http://www.gradle.org/) build (with support of optional and provided dependencies)
 * [Maven central](http://search.maven.org/) compatible artifacts (jar, sources, javadocs)
-* Ready for [spock](https://code.google.com/p/spock/) tests ([documentation](http://spock-framework.readthedocs.org/en/latest/))
+* Ready for [spock](http://spockframework.org) tests ([documentation](http://docs.spockframework.org))
 * [Bintray](https://bintray.com/) publication (+ jars signing and maven central publishing)
 * [Travis-ci](https://travis-ci.org/) integration (CI and healthy badge)
 * [Coveralls](http://coveralls.io/) integration (code coverage badge)
