@@ -1,1 +1,1 @@
-require('mocha-jshint')(['app/']);
+require('mocha-jshint')({paths:['app/']});

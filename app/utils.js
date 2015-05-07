@@ -8,7 +8,8 @@ var url = require('url'),
     fs = require('fs'),
     _s = require('underscore.string'),
     chalk = require('chalk'),
-    Insight = require('insight');
+    Insight = require('insight'),
+    glob = require('glob');
 
 function Helper(gen) {
     this.$ = gen;
@@ -125,7 +126,7 @@ _.extend(Helper.prototype, {
         if (!_s.endsWith(dir, '/')) {
             dir += '/';
         }
-        this.$.expandFiles(opts.glob, {cwd: this.$.templatePath(dir)}).map(function (file) {
+        glob.sync(opts.glob, {cwd: this.$.templatePath(dir), nodir: true}).map(function (file) {
             var targetFile = file;
             if (opts.processDotfiles) {
                 targetFile = targetFile.replace(/^_|\/_/, '/.'); // replace _ to  .

@@ -1,6 +1,3 @@
-import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-import java.awt.*
-
 buildscript {
     apply from: "gradle/buildscript.gradle", to: buildscript
 }
@@ -11,7 +8,7 @@ description = '<%= libDesc %>'
 // convention: project.name == github project name == bintray package page
 project.ext {
     build = {
-        gradle = 2.3
+        gradle = 2.4
         java = <%= targetJava %>
         // if not empty runs animal sniffer on compile to guarantee binary compatibility; set '' to disable
         signature = '<%= animalsnifferSignature %>'
@@ -23,7 +20,7 @@ project.ext {
         user = project.hasProperty('bintrayUser') ? bintrayUser : 'USER' // configured in ~/.gradle/gradle.properties
         key = project.hasProperty('bintrayKey') ? bintrayKey : 'KEY' // configured in ~/.gradle/gradle.properties
         repo = '<%= bintrayRepo %>'
-        tags = [<% _.forEach(libTags, function(tag, i) { %>'<%= tag %>'<%; if (i<libTags.length-1){%>, <%} }); %>]
+        tags = [<% libTags.forEach(function(tag, i) { %>'<%= tag %>'<%; if (i<libTags.length-1){%>, <%} }); %>]
         dryRun = false // whether to run this as dry-run, without deploying (TEST RUN)
         publish = true //If version should be auto published after an upload
 
@@ -74,15 +71,22 @@ apply from: 'gradle/maven.gradle'
 
 apply from: 'build-deps.gradle'
 
-task checkOutOfDate(type: DependencyUpdatesTask, description: 'Checks dependencies updates availability') {
-    revision 'release'
+dependencyUpdates.revision = 'release'
+
+task showDependenciesTree(dependsOn: 'htmlDependencyReport', group: 'help', description:
+        'Generates dependencies tree report and opens it in browser') << {
+    java.awt.Desktop.getDesktop().open(file('/build/reports/project/dependencies/root.html'))
 }
 
-task showDependenciesTree(dependsOn: 'htmlDependencyReport', description:
-        'Generates dependencies tree report and opens it in browser (useful to analyze dependencies)') << {
-    Desktop.getDesktop().open(file('/build/reports/project/dependencies/root.html'))
-}
-
-task install(dependsOn: 'publishMavenJavaPublicationToMavenLocal', description: 'Install to local maven repository') << {
+task install(dependsOn: 'publishMavenJavaPublicationToMavenLocal', group: 'publishing',
+        description: 'Install to local maven repository') << {
     logger.warn "INSTALLED $project.group:$project.name:$project.version"
 }
+
+/*
+Tasks hint:
+    - dependencyUpdates: checks available dependencies updates
+    - dependencies: print dependencies tree in console
+    - check: run quality checks and tests
+    - release: release version
+*/

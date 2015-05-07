@@ -1,3 +1,13 @@
+### 1.0.4 (2015-05-07)
+* Update gradle 2.3 -> 2.4
+* Update gradle-bintray-plugin 1.1 -> 1.2
+* Update gradle-versions-plugin 0.8 -> 0.9
+* Remove explicit pmd dependencies because gradle now supports pmd 5.2 and above (not updated to 5.3.1 because of regression https://sourceforge.net/p/pmd/bugs/1331/)
+* Update checkstyle 6.4.1 -> 6.5 (not updated to 6.6 because it fails with NPE sometimes)
+* Switch gradle-release-plugin from com.github.townsfolk:gradle-release to net.researchgate:gradle-release (old plugin abandoned and this one is the new version)
+* Removed checkOutOfDate task: use dependencyUpdates task instead (provided by version plugin)
+* Apply correct groups for custom tasks
+
 ### 1.0.3 (2015-03-12)
 * Update spock 0.7 -> 1.0
 * Update findbugs 3.0.0 -> 3.0.1

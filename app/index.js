@@ -1,7 +1,5 @@
 'use strict';
 
-// update generator to 1.18.9 or above when new windows inslaller release with updated npm (2.6)
-// because new yeoman 1.4.5 required for proper work
 var yeoman = require('yeoman-generator'),
     chalk = require('chalk'),
     path = require('path'),

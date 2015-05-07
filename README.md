@@ -172,10 +172,16 @@ Runs code quality plugins. If quality checks were activated (asked during genera
 build failures on travis. Moreover, it's easy to always keep everything clean instead of doing it before release.
 
 ```bash
-$ gradlew checkOutOfDate
+$ gradlew dependencyUpdates
 ```
 
 Checks if your project dependencies are actual and prints versions analysis report to console.
+
+```bash
+$ gradlew dependencies
+```
+
+Prints dependencies tree into console
 
 ```bash
 $ gradlew showDependenciesTree
@@ -243,7 +249,7 @@ Used gradle plugins:
 * [checkstyle](http://www.gradle.org/docs/current/userguide/checkstyle_plugin.html) to check code style rules with [checkstyle](http://checkstyle.sourceforge.net/index.html)
 * [findbugs](http://www.gradle.org/docs/current/userguide/findbugs_plugin.html) to find potential bugs with [findbugs](http://findbugs.sourceforge.net/)
 * [be.insaneprogramming.gradle.animalsniffer](https://bitbucket.org/lievendoclo/animalsniffer-gradle-plugin) to verify jdk backwards compatibility when building on newer jdk
-* [release](https://github.com/townsfolk/gradle-release) for release (see [article](http://www.sosaywecode.com/gradle-release-plugin/) for additional plugin details)
+* [release](https://github.com/researchgate/gradle-release) for release (see [article](http://www.sosaywecode.com/gradle-release-plugin/) for additional plugin details)
 
 #### Java compatibility
 
