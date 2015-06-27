@@ -81,9 +81,6 @@ module.exports = yeoman.generators.Base.extend({
         initGenerator: function () {
             this.context.usedGeneratorVersion = this.config.get('usedGeneratorVersion');
             this.context.pkg = require('../package.json');
-            if (!this.options.offline) {
-                this.context.insight = this.helper.initInsight(this.context.pkg);
-            }
         },
 
         initDateVars: function () {
@@ -121,12 +118,6 @@ module.exports = yeoman.generators.Base.extend({
                     'If you need to re-run questions use --ask generator option.');
                 }
                 this.log();
-            }
-        },
-
-        askInsight: function () {
-            if (this.context.insight && _.isUndefined(this.context.insight.optOut)) {
-                return this.context.insight.askPermission(null, this.async());
             }
         },
 
@@ -330,16 +321,6 @@ module.exports = yeoman.generators.Base.extend({
     },
 
     configuring: {
-        insightReport: function () {
-            var insight = this.context.insight;
-            if (insight) {
-                insight.track(this.context.updateMode ? 'update' : 'create');
-                insight.track('targetJava', this.targetJava);
-                insight.track('bintraySign', this.bintraySignFiles);
-                insight.track('mavenCentralSync', this.mavenCentralSync);
-                insight.track('qualityChecks', this.enableQualityChecks);
-            }
-        },
 
         enforceFolderName: function () {
             if (this.appname !== _.last(this.destinationRoot().split(path.sep))) {

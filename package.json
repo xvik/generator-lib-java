@@ -1,6 +1,6 @@
 {
   "name": "generator-lib-java",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "Java library project generator, hosted on github, build with gradle and published to bintray and maven central",
   "license": "MIT",
   "main": "app/index.js",
@@ -38,7 +38,6 @@
     "configstore": "^1.0.0",
     "github": "^0.2.4",
     "glob": "^5.0.5",
-    "insight": "^0.5.3",
     "lodash": "^3.8.0",
     "properties": "^1.2.1",
     "sprintf": "^0.1.5",
