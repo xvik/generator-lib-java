@@ -295,8 +295,10 @@ and issue will be resolved (issue occur because of IDE).
 
 Quality tools are configured in `gradle/quality.gradle`. Tools configuration files could be found in `gradle/config/*`.
 
-All quality plugins are configured to fail build. All found issues are printed to console with description, so most of the time
+By default all quality plugins are configured to fail build. All found issues are printed to console with description, so most of the time
 console output is enough to understand and fix problem.
+
+If you want to avoid build failures set `strictQualityCheck = false` in `build.gradle`. Console reporting will remain, but build will pass.
 
 #### Checkstyle
 
