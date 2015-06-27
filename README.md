@@ -154,6 +154,19 @@ Go to [coveralls](http://coveralls.io/) and enable your repo.
 
 Bintray and maven central badges are generated in readme, but commented (uncomment before release).
 
+### Snapshots
+
+[JitPack](https://jitpack.io) is ideal for snapshots: it builds github project and serves dependency for you.
+Special section in project readme is generated to show how to use it for snapshots.
+JitPack doesn't require any configuration to support your library.
+
+Bintray is still used for releases, because:
+* Maven central require jar signing, which grants secure usage of your artifact (and prevents artifact changes, 
+for example, malicious injections)
+* Bintray jcenter now become standard for java projects (second to maven central). It is trusted and, for example, in gradle enabled by default 
+(no need to specify custom repository).
+* It's not used frequently, but bintray supports user notifications about new versions.
+
 ### Gitter
 
 [Gitter](https://gitter.im) is a chat room for your repository. Most likely, with it you

@@ -1,3 +1,4 @@
+### 1.1.0 (2015-06-27)
 * Update coveralls-gradle-plugin 2.3.1 -> 2.4.0
 * Update gradle-versions-plugin 0.9 -> 0.11.3
 * Update gradle-release 2.0.2 -> 2.1.2
@@ -5,6 +6,7 @@
 * Update pmd 5.2.3 -> 5.3.2
 * Add strictQualityCheck option to build.gradle to be able to disable build fail on quality plugin warnings
 * Remove anonymous analytics
+* Add snapshots section to readme: describes how to use JitPack 
 
 ### 1.0.4 (2015-05-07)
 * Update gradle 2.3 -> 2.4
