@@ -45,7 +45,7 @@ module.exports = yeoman.generators.Base.extend({
         this.helper = new Helper(this);
 
         this.option('offline', {
-            desc: 'Disables github user lookup and analytics send',
+            desc: 'Disables github user lookup',
             type: Boolean,
             defaults: false
         });
