@@ -1,3 +1,6 @@
+### 1.1.2 (2015-07-29)
+* Fix java 7 build compatibility
+
 ### 1.1.1 (2015-07-29)
 * Update gradle 2.4 -> 2.5
 * Update checkstyle 6.7 -> 6.8.1 (with compatibility fix)
