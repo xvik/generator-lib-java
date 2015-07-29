@@ -1,3 +1,8 @@
+### 1.1.1 (2015-07-29)
+* Update gradle 2.4 -> 2.5
+* Update checkstyle 6.7 -> 6.8.1 (with compatibility fix)
+* Update pmd 5.3.2 -> 5.3.3
+
 ### 1.1.0 (2015-06-27)
 * Update coveralls-gradle-plugin 2.3.1 -> 2.4.0
 * Update gradle-versions-plugin 0.9 -> 0.11.3

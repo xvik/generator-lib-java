@@ -53,10 +53,11 @@ describe('lib-java generator', function () {
         var isWin = /^win/.test(process.platform),
             targetFile = targetPath + '/testlib/gradlew' + (isWin ? '.bat' : '');
         execFile(targetFile, ['check'], function (err, stdout, stderr) {
-            if (err instanceof Error)
-                throw err;
             console.log(stdout);
             console.log(stderr);
+            console.log(err);
+            if (err instanceof Error)
+                throw err;
             done();
         });
     });

@@ -8,7 +8,7 @@ description = '<%= libDesc %>'
 // convention: project.name == github project name == bintray package page
 project.ext {
     build = {
-        gradle = 2.4
+        gradle = 2.5
         java = <%= targetJava %>
         // if not empty runs animal sniffer on compile to guarantee binary compatibility; set '' to disable
         signature = '<%= animalsnifferSignature %>'
