@@ -1,3 +1,10 @@
+### 1.1.3 (2015-08-13)
+* Update gradle 2.5 -> 2.6
+* Update checkstyle 6.8.1 -> 6.9
+* Update gradle-bintray-plugin 1.2 -> 1.3.1
+* Update gradle-release plugin 2.1.2 -> 2.2.0
+* Update .travis.yml to use [container infrastructure](http://docs.travis-ci.com/user/migrating-from-legacy) and enable cache for gradle dependencies
+
 ### 1.1.2 (2015-07-29)
 * Fix java 7 build compatibility
 
