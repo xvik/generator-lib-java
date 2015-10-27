@@ -1,3 +1,13 @@
+### 1.1.4 (2015-10-27)
+* Change maven badge from maven-badges.herokuapp.com to shields.io (but link still leads to maven-badges.herokuapp.com) 
+* Change bintray badge to shields.io badge (for custom label)
+* Update gradle 2.6 -> 2.8
+* Update checkstyle 6.9 -> 6.11.2
+    - compatibility.jar is not required anymore and must be removed from gradle/config/checkstyle/compatibility.jar
+* Update pmd 5.3.3 -> 5.4.0
+* Update gradle-bintray-plugin 1.3.1 -> 1.4
+* Update gradle-release 2.2.0 -> 2.3.0    
+
 ### 1.1.3 (2015-08-13)
 * Update gradle 2.5 -> 2.6
 * Update checkstyle 6.8.1 -> 6.9
