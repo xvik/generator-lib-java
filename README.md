@@ -1,14 +1,13 @@
 #Java library yeoman generator
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/xvik/generator-lib-java)
-[![License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://www.opensource.org/licenses/MIT)
-[![NPM version](http://img.shields.io/npm/v/generator-lib-java.svg?style=flat)](http://badge.fury.io/js/generator-lib-java)
-[![Build Status](https://secure.travis-ci.org/xvik/generator-lib-java.png?branch=master)](https://travis-ci.org/xvik/generator-lib-java)
+[![License](http://img.shields.io/badge/license-MIT-blue.svg)](http://www.opensource.org/licenses/MIT)
+[![NPM version](http://img.shields.io/npm/v/generator-lib-java.svg)](http://badge.fury.io/js/generator-lib-java)
+[![Build Status](https://secure.travis-ci.org/xvik/generator-lib-java.png)](https://travis-ci.org/xvik/generator-lib-java)
 
 ### About
 
 The main goal is to simplify new [github](https://github.com) java library setup.
-Also simplifies existing build upgrade.
 
 Features:
 * [MIT](http://opensource.org/licenses/MIT) license (hardcoded)
@@ -31,8 +30,6 @@ Requires jdk7 or above.
 
 ### Example projects
 
-I'm using generator to synchronize builds of projects
-
 * [guice-persist-orient](https://github.com/xvik/guice-persist-orient)
 * [guice-ext-annotations](https://github.com/xvik/guice-ext-annotations)
 * [guice-validator](https://github.com/xvik/guice-validator)
@@ -53,16 +50,6 @@ Install generator:
 ```bash
 $ npm install -g generator-lib-java
 ```
-
-##### Update
-
-To update generator:
-
-```bash
-$ npm update -g generator-lib-java
-```
-
-Generator gets updated often with new versions of gradle, plugins or quality tools.
 
 ### Github setup
 
@@ -137,10 +124,10 @@ Start update without local changes and after generation look git changes and cor
 
 #### Global storage
 
-Most likely some answers will be the same for all your libraries, that's why they are stored in global config and
+Most likely, some answers will be the same for all your libraries, that's why they are stored in global config and
 you will see more precise defaults on next generation.
 
-Global config stored in `~/.config/configstore/generator-lib-java.yml`
+Global config stored in `~/.config/configstore/generator-lib-java.json`
 
 ### External services
 
@@ -216,10 +203,34 @@ $ gradlew release
 
 Releases library. Read release process section below before performing first release.
 
+### Project details
+
+[Sample build file](https://github.com/xvik/generator-lib-java/wiki/Build-file-annotated) with comments.
+
+Used gradle plugins:
+* [java](http://www.gradle.org/docs/current/userguide/java_plugin.html)
+* [groovy](http://www.gradle.org/docs/current/userguide/groovy_plugin.html) to support spock tests
+* [maven-publish](http://www.gradle.org/docs/current/userguide/publishing_maven.html) to generate pom and publish to maven repository
+* [project-report](http://www.gradle.org/docs/current/userguide/project_reports_plugin.html) to generate dependency tree html report
+* [jacoco](http://www.gradle.org/docs/current/userguide/jacoco_plugin.html) to build coverage report for coveralls
+* [pmd](http://www.gradle.org/docs/current/userguide/pmd_plugin.html) to check code quality with [PMD](http://pmd.sourceforge.net/) tool
+* [checkstyle](http://www.gradle.org/docs/current/userguide/checkstyle_plugin.html) to check code style rules with [checkstyle](http://checkstyle.sourceforge.net/index.html)
+* [findbugs](http://www.gradle.org/docs/current/userguide/findbugs_plugin.html) to find potential bugs with [findbugs](http://findbugs.sourceforge.net/)
+* [com.jfrog.bintray](https://github.com/bintray/gradle-bintray-plugin) for bintray publishing
+* [com.github.ben-manes.versions](https://github.com/ben-manes/gradle-versions-plugin) to check dependencies versions updates
+* [com.github.kt3k.coveralls](https://github.com/kt3k/coveralls-gradle-plugin) to send coverage report to coveralls
+* [net.researchgate.release](https://github.com/researchgate/gradle-release) for release (see [article](http://www.sosaywecode.com/gradle-release-plugin/) for additional plugin details)
+* [ru.vyarus.pom](https://github.com/xvik/gradle-pom-plugin) for simpler pom generation
+* [ru.vyarus.java-lib](https://github.com/xvik/gradle-java-lib-plugin) to prepare java artifacts setup
+* [ru.vyarus.github-info](https://github.com/xvik/gradle-github-info-plugin) to fill in github specific data
+* [ru.vyarus.quality](https://github.com/xvik/gradle-quality-plugin) to configure quality plugins and provide advanced reporting
+* [ru.vyarus.animalsniffer](https://github.com/xvik/gradle-animalsniffer-plugin) to verify jdk backwards compatibility when building on newer jdk
 
 #### Optional dependencies
 
-Optional and provided dependencies could be defined, for example:
+Optional and provided dependencies support provided by [ru.vyarus.pom plugin](https://github.com/xvik/gradle-pom-plugin).
+
+Example usage:
 
 ```groovy
 provided 'com.google.code.findbugs:jsr305:3.0.0'
@@ -234,136 +245,43 @@ optional 'com.google.code.findbugs:jsr305:3.0.0'
 In generated pom these dependencies will be defined as provided or optional, but for gradle build it's
 the same as declaring them in `compile` scope.
 
-jsr305 provided dependency is defined by default in generated project (useful to guide firebug).
+jsr305 provided dependency is defined by default in generated project (useful to guide firebug). 
 
 Scala note: The Scala compiler, unlike the Java compiler, [requires that annotations used by a library be available when
 compiling against that library](https://issues.scala-lang.org/browse/SI-5420).
 If your library users will compile with Scala, they must declare a dependency on JSR-305 jar.
 
-### Project details
-
-All project specific data (mostly inserted with generator) is in `build.gradle` file.
-`project.ext` section contains configuration objects definitions.
-These definitions are extended using conventions (see `github.gradle`, `bintray.gradle`).
-
-Project dependencies are specified in `build-deps.gradle`. This simplifies library upgrade and a bit more handy to use
-(because dependencies are checked or updated much more often then all other config).
-
-Used gradle plugins:
-* [java](http://www.gradle.org/docs/current/userguide/java_plugin.html)
-* [groovy](http://www.gradle.org/docs/current/userguide/groovy_plugin.html) to support spock tests
-* [maven-publish](http://www.gradle.org/docs/current/userguide/publishing_maven.html) to generate pom and publish to maven repository
-* [com.jfrog.bintray](https://github.com/bintray/gradle-bintray-plugin) for bintray publishing
-* [com.github.ben-manes.versions](https://github.com/ben-manes/gradle-versions-plugin) to check dependencies versions updates
-* [project-report](http://www.gradle.org/docs/current/userguide/project_reports_plugin.html) to generate dependency tree html report
-* [jacoco](http://www.gradle.org/docs/current/userguide/jacoco_plugin.html) to build coverage report for coveralls
-* [com.github.kt3k.coveralls](https://github.com/kt3k/coveralls-gradle-plugin) to send coverage report to coveralls
-* [pmd](http://www.gradle.org/docs/current/userguide/pmd_plugin.html) to check code quality with [PMD](http://pmd.sourceforge.net/) tool
-* [checkstyle](http://www.gradle.org/docs/current/userguide/checkstyle_plugin.html) to check code style rules with [checkstyle](http://checkstyle.sourceforge.net/index.html)
-* [findbugs](http://www.gradle.org/docs/current/userguide/findbugs_plugin.html) to find potential bugs with [findbugs](http://findbugs.sourceforge.net/)
-* [be.insaneprogramming.gradle.animalsniffer](https://bitbucket.org/lievendoclo/animalsniffer-gradle-plugin) to verify jdk backwards compatibility when building on newer jdk
-* [release](https://github.com/researchgate/gradle-release) for release (see [article](http://www.sosaywecode.com/gradle-release-plugin/) for additional plugin details)
-
 #### Java compatibility
 
-I prefer to use more recent jdk for build because recent checkstyle and findbugs requires it and also new jdk features
-could be used in tests. But it's better for resulted library is be compatible with older jdk's.
+It still makes sense to keep library compatibility with older java version (6 or 7), even when newer java used for development.
 
-To do compatibility we use target jvm flag (to get correct class file version) and animalsniffer plugin to
-guarantee that we havn't used any recent api in project (not available in older jdk).
-
-See build config section in `build.gradle`:
+But when project compiled with newer jdk, there is a chance to use newer api, not available in target (older) jdk. 
+[ru.vyarus.animalsniffer plugin](https://github.com/xvik/gradle-animalsniffer-plugin) checks jdk api usage. 
+ 
+There is special dependency configuration `signature` which defines target signature to check, e.g.:
 
 ```groovy
-    build = {
-        ...
-        java = 1.6
-        signature = 'org.codehaus.mojo.signature:java16-sun:+@signature'
+signature 'org.codehaus.mojo.signature:java16-sun:+@signature'
 ```
-
-`java` option defines target and source java compiler options.
-
-`signature` defines [animal sniffer](http://mojo.codehaus.org/animal-sniffer/) signature to check.
-With it you can use any jdk while developing and if you accidentally use newer api than defined in signature
-it will warn you on compilation. You can find [other signatures in maven central](http://search.maven.org/#search%7Cga%7C2%7Csignature).
-To switch off animal sniffer check simply set signature value to `''`
-
-Known issue: sometimes gradle build failed on animal sniffer task with generic error. In this case simply execute gradle clean
-and issue will be resolved (issue occur because of IDE).
+ 
+When no signatures defined, no check will be performed.
 
 ### Quality tools
 
-Quality tools are configured in `gradle/quality.gradle`. Tools configuration files could be found in `gradle/config/*`.
+Quality tools are configured by [ru.vyarus.quality plugin](https://github.com/xvik/gradle-quality-plugin).
 
-By default all quality plugins are configured to fail build. All found issues are printed to console with description, so most of the time
-console output is enough to understand and fix problem.
+Read more about quality tools specifics and how to suppress warnings:
+* [checkstyle](https://github.com/xvik/gradle-quality-plugin#checkstyle)
+* [pmd](https://github.com/xvik/gradle-quality-plugin#pmd)
+* [findbugs](https://github.com/xvik/gradle-quality-plugin#findbugs)
 
-If you want to avoid build failures set `strictQualityCheck = false` in `build.gradle`. Console reporting will remain, but build will pass.
+By default, quality checks fail build if any violation found. In order to simply report violations do:
 
-#### Checkstyle
-
-[Checkstyle rules documentation](http://checkstyle.sourceforge.net/availablechecks.html)
-
-To suppress checkstyle warnings (required for some exceptional cases) use `@SuppressWarnings` annotation with
-value composed as `checkstyle:` prefix and lowercased checkstyle check name:
-
-```java
-@SuppressWarnings("checkstyle:classdataabstractioncoupling")
+```groovy
+quality {
+    strict = false
+}
 ```
-
-To suppress all checkstyle checks in class comments syntax could be used before class:
-
-```java
-// CHECKSTYLE:OFF
-```
-
-Also, use checkstyle plugin for your IDE (for example, CheckStyle-IDEA for idea) and set your checkstyle configuration
-for plugin. This way you will see issues quicker and will have to do less cleanups before commit (where you will call
-quality checks).
-
-
-#### PMD
-
-[PMD rules documentation](http://pmd.sourceforge.net/pmd-5.2.3/pmd-java/rules/index.html)
-
-To suppress PMD violation use (in case PMD makes a mistake):
-
-```java
-@SuppressWarnings("PMD.checkName")
-```
-
-To suppress all PMD checks in class:
-
-```java
-@SuppressWarnings("PMD")
-```
-
-Pmd configuration file: `gradle/config/pmd/pmd.xml`
-
-#### Findbugs
-
-[Findbugs detected bugs descriptions](http://findbugs.sourceforge.net/bugDescriptions.html)
-
-To suppress findbugs warnings you can use [exclusion filter](http://findbugs.sourceforge.net/manual/filter.html) (gradle/config/findbugs/exclude.xml).
-Findbug does not support @SuppressWarnings, instead you can use it's own [@SuppressFBWarnings](http://findbugs.sourceforge.net/api/edu/umd/cs/findbugs/annotations/SuppressFBWarnings.html)
-(but you will have to add dependency for annotations `'com.google.code.findbugs:annotations:3.0.0'`)
-
-You may face issue with guava functions or predicates:
-
-```
-input must be nonnull but is marked as nullable [NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE]
-```
-
-The reason for this is that guava use `@Nullable` annotation, which is `@Inherited`, so
-even if you not set annotation on your own function or predicate it will still be visible,
-
-The simplest workaround is to set `@Nonnull` annotaion (from jsr305 jar included by default) on your function or predicate:
-
-```java
-public boolean apply(@Nonnull final Object input) {
-```
-
-Also, it's good idea to use jsr305 annotations to guide findbugs.
 
 ### Release process
 
@@ -408,8 +326,6 @@ You can start releasing either from snapshot version (1.0.0-SNAPSHOT) or from no
 
 During release, plugin will create tag (new github release appear) and update version in `gradle.properties`.
 
-NOTE: Sometimes release plugin [did not set 'SNAPSHOT' postfix](https://github.com/townsfolk/gradle-release/issues/64) to new version.
-
 You may want to create github release: release will only create tag. To create release go to github releases, click on tag and press 'edit'.
 I usually use text from changelog as release message, but you may expand it with other release specific notes.
 
@@ -421,24 +337,24 @@ the name of changes file (CHANGELOG.md). After that click on 'readme' tab on pac
 Do the same on 'release notes' tab.
 
 After actual release press 'add to jcenter' button to request jcenter linking (required for maven central publication
-and even if you dont want to sync to maven central, linking to jcenter will simplify library usage for end users).
+and even if you don't want to sync to maven central, linking to jcenter will simplify library usage for end users).
 
-After acceptance in jcenter do manual maven central synchronization in bintray ui.
+After acceptance in jcenter (approve takes less than 1 day) do manual maven central synchronization in bintray ui.
 
 Now automatic maven central publication could be enabled in project config `build.gradle`:
 
 ```
-project.ext {
-    ...
-    bintray = {
+bintray {
         ...
-        mavenCentralSync = true
+        mavenCentralSync {
+            sync = true
 ```
 
 Note that maven publication requires files signing option active too (if you not choose it during project generation):
 
 ```
-signFiles = true
+        gpg {
+            sign = true
 ```
 
 All future releases will publish to maven central automatically.

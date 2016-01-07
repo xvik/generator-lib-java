@@ -1,3 +1,9 @@
+* Build logic extracted to gradle plugins. As a result, only one small build file required now:
+    - removed build-deps.gradle
+    - removed all geadle files inside gradle/ folder
+* Quality tools configs (gradle/config) removed: they are maintained by gradle quality plugin
+* Update gradle 2.8 -> 2.10     
+
 ### 1.1.4 (2015-10-27)
 * Change maven badge from maven-badges.herokuapp.com to shields.io (but link still leads to maven-badges.herokuapp.com) 
 * Change bintray badge to shields.io badge (for custom label)

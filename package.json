@@ -1,6 +1,6 @@
 {
   "name": "generator-lib-java",
-  "version": "1.1.4",
+  "version": "2.0.0",
   "description": "Java library project generator, hosted on github, build with gradle and published to bintray and maven central",
   "license": "MIT",
   "main": "app/index.js",
@@ -16,7 +16,7 @@
     "url": "https://github.com/xvik"
   },
   "engines": {
-    "node": ">=0.12.1"
+    "node": ">=4.1.1"
   },
   "scripts": {
     "test": "mocha"
@@ -35,22 +35,12 @@
   ],
   "dependencies": {
     "chalk": "^1.0.0",
-    "configstore": "^1.0.0",
-    "github": "^0.2.4",
-    "glob": "^5.0.5",
-    "lodash": "^3.8.0",
-    "properties": "^1.2.1",
-    "sprintf": "^0.1.5",
-    "underscore.string": "^3.0.3",
-    "user-home": "^1.1.1",
-    "yeoman-generator": "0.19.2"
+    "yeoman-generator": "0.21.1",
+    "yo-java-helper": "^1.0.0"
   },
   "devDependencies": {
     "fs-readdir-recursive": "^0.1.1",
     "mocha": "*",
     "mocha-jshint": "2.2.3"
-  },
-  "peerDependencies": {
-    "yo": ">=1.4.5"
   }
 }

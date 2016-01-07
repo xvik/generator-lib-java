@@ -2,15 +2,12 @@
 
 var yeoman = require('yeoman-generator'),
     chalk = require('chalk'),
-    path = require('path'),
-    _ = require('lodash'),
-    Helper = require('./utils'),
-    printf = require('sprintf');
+    Helper = require('yo-java-helper');
 
 /**
  * Generator variables, available for templates:
  */
-var questions = [
+const questions = [
     'githubUser',           // github user name
     'authorName',           // author full name
     'authorEmail',          // author email
@@ -28,7 +25,7 @@ var questions = [
     'enableQualityChecks'  // true if quality checks enabled
 ];
 
-var globals = [
+const globals = [
     'githubUser',
     'authorName',
     'authorEmail',
@@ -42,7 +39,7 @@ module.exports = yeoman.generators.Base.extend({
 
     constructor: function () {
         yeoman.generators.Base.apply(this, arguments);
-        this.helper = new Helper(this);
+        this.helper = new Helper(this, require('../package.json'));
 
         this.option('offline', {
             desc: 'Disables github user lookup',
@@ -54,68 +51,35 @@ module.exports = yeoman.generators.Base.extend({
             type: Boolean,
             defaults: false
         });
-        // yeoman replace '-' with space ???!
-        this.appname = this.helper.folderName(this.appname);
     },
 
     initializing: {
-        initConfig: function () {
-            // if all questions answered no need to ask again
-            var context = this.context = {
-                allAnswered: true,
-                updateMode: false
-            };
-
-            // read stored configuration to not ask questions second time
-            questions.forEach(function (name) {
-                this[name] = this.config.get(name);
-                if (_.isUndefined(this[name])) {
-                    context.allAnswered = false;
-                } else {
-                    // config exist
-                    context.updateMode = true;
-                }
-            }.bind(this));
-        },
-
-        initGenerator: function () {
-            this.context.usedGeneratorVersion = this.config.get('usedGeneratorVersion');
-            this.context.pkg = require('../package.json');
-        },
-
-        initDateVars: function () {
-            // init date variables for templates
-            var d = new Date();
-            var month = d.getMonth() + 1;
-            var monthStr = this.helper.twoDigits(month);
-
-            this.year = d.getFullYear();
-            this.date = printf('%s.%s.%s', d.getDate(), monthStr, d.getFullYear());
-            this.reverseDate = printf('%s-%s-%s', d.getFullYear(), monthStr, this.helper.twoDigits(d.getDate()));
+        init: function () {
+            this.helper.initConfig(questions);
+            this.helper.initDateVars();
         },
 
         readGradleConfig: function () {
             var done = this.async();
-            this.context.gradleConfPath = this.helper.homePath('.gradle/gradle.properties');
-            this.helper.readProperties(this.context.gradleConfPath, function (res) {
+            this.context.gradleConfPath = this.helper.resolveFileFromUserHome('.gradle/gradle.properties');
+            this.helper.readProperties(this.context.gradleConfPath, res => {
                 this.context.gradleConf = res;
                 done();
-            }.bind(this));
+            });
         }
     },
 
     prompting: {
         greeting: function () {
-            this.log(chalk.yellow(this.helper.banner(this.templatePath('banner.txt'))));
-            this.log('                                      v.' + chalk.green(this.context.pkg.version));
+            this.log(chalk.yellow(this.helper.readBanner('banner.txt')));
+            this.log(`                                      v.${chalk.green(this.context.pkg.version)}`);
             this.log();
             if (this.context.updateMode) {
-                this.log(printf('Updating library %s, generated with v.%s',
-                    chalk.red(this.appname), chalk.green(this.context.usedGeneratorVersion)));
+                this.log(`Updating library ${chalk.red(this.appname)}, generated with v.${chalk.green(this.context.usedGeneratorVersion)}`);
                 if (this.context.allAnswered && !this.options.ask) {
                     this.log();
                     this.log('Using stored answers from .yo-rc.json. \n' +
-                    'If you need to re-run questions use --ask generator option.');
+                        'If you need to re-run questions use --ask generator option.');
                 }
                 this.log();
             }
@@ -127,66 +91,46 @@ module.exports = yeoman.generators.Base.extend({
                 return;
             }
 
-            var done = this.async(),
-                github = options.offline ? null : this.helper.initGithubApi(),
-                githubData = {};
-            var prompts = [{
-                name: 'githubUser', message: 'GitHub user name',
-                default: this.helper.defaultValue('githubUser'),
-                validate: function (input) {
-                    var done = this.async();
-                    if (!github) {
-                        done(!input ? 'Github user required' : true);
-                    } else {
-                        github.user.getFrom({
-                            user: input
-                        }, function (err, res) {
-                            if (err) {
-                                done(printf('Cannot fetch your github profile %s. Make sure ' +
-                                    'you\'ve typed it correctly. (or run with --offline generator option)',
-                                    chalk.red(input)));
-                            } else {
-                                githubData = JSON.parse(JSON.stringify(res));
-                                done(true);
+            var githubData = {},
+                helper = this.helper,
+                prompts = [
+                    {
+                        type: 'input',
+                        name: 'githubUser',
+                        message: 'GitHub user name',
+                        default: this.helper.defaultValue('githubUser'),
+                        validate: function(input) {
+                            var done = this.async();
+                            if (options.offline) {
+                                done(!input ? 'Github user required' : true);
+                                return;
                             }
-                        });
+                            helper.getGithubData(input, (err, res) => {
+                                if (err) {
+                                    done(res);
+                                } else {
+                                    githubData = res;
+                                    done(true);
+                                }
+                            });
+                        }
+                    },
+                    {
+                        type: 'input',
+                        name: 'authorName',
+                        message: 'Author name',
+                        default: () => githubData.name || this.helper.defaultValue('authorName'),
+                        validate: input => !input ? 'Author name required' : true
+                    },
+                    {
+                        type: 'input',
+                        name: 'authorEmail',
+                        message: 'Author email',
+                        default: () => githubData.email || this.helper.defaultValue('authorEmail'),
+                        validate: input => !input ? 'Author email required' : true
                     }
-                }
-            },
-                {
-                    type: 'input',
-                    name: 'authorName',
-                    message: 'Author name',
-                    default: function () {
-                        return githubData.name || this.helper.defaultValue('authorName');
-                    }.bind(this),
-                    validate: function (input) {
-                        return !input ? 'Author name required' : true;
-                    }
-
-                },
-                {
-                    type: 'input',
-                    name: 'authorEmail',
-                    message: 'Author email',
-                    default: function () {
-                        return githubData.email || this.helper.defaultValue('authorEmail');
-                    }.bind(this),
-                    validate: function (input) {
-                        return !input ? 'Author email required' : true;
-                    }
-                }
-            ];
-
-            this.prompt(prompts, function (props) {
-                questions.forEach(function (name) {
-                    var value = props[name];
-                    if (!_.isUndefined(value)) {
-                        this[name] = value;
-                    }
-                }.bind(this));
-                done();
-            }.bind(this));
+                ];
+            this.helper.prompt(prompts, questions);
         },
 
         askForLibName: function () {
@@ -195,22 +139,14 @@ module.exports = yeoman.generators.Base.extend({
                 return;
             }
 
-            var done = this.async();
-            var libName = this.helper.folderName(this.appname);
-
-            this.log(printf('Accept default library name %s to generate in current folder, ' +
-            'otherwise new folder will be created', chalk.red(libName)));
+            this.log(`Accept default library name ${chalk.red(this.appname)} to generate in current folder, otherwise new folder will be created`);
 
             var prompts = [{
-                name: 'libName', message: 'Library name', default: this.libName || libName,
+                name: 'libName', message: 'Library name', default: this.libName || this.appname,
                 filter: this.helper.folderName
             }];
 
-            this.prompt(prompts, function (props) {
-                this.libName = props.libName;
-                this.appname = this.libName;
-                done();
-            }.bind(this));
+            this.helper.prompt(prompts, ['libName'], props => this.appname = props.libName);
         },
 
         other: function () {
@@ -218,28 +154,23 @@ module.exports = yeoman.generators.Base.extend({
                 return;
             }
 
-            var done = this.async(),
-                disableOnUpdate = function () {
-                    return !this.context.updateMode;
-                }.bind(this);
+            var disableOnUpdate = () => !this.context.updateMode;
 
             var prompts = [
                 {
                     type: 'input',
                     name: 'libGroup',
                     message: 'Maven artifact group',
-                    validate: this.helper.validatePackageFn,
+                    validate: this.helper.validatePackage,
                     default: this.helper.defaultValue('libGroup', 'com.mycompany')
                 },
                 {
                     type: 'input',
                     name: 'libPackage',
                     message: 'Base package',
-                    validate: this.helper.validatePackageFn,
+                    validate: this.helper.validatePackage,
                     when: disableOnUpdate,
-                    default: function (props) {
-                        return this.libPackage || props.libGroup + '.' + this.libName.replace(/(\s+|-|_)/g, '.');
-                    }.bind(this)
+                    default: props => this.libPackage || props.libGroup + '.' + this.libName.replace(/(\s+|-|_)/g, '.')
                 },
                 {type: 'input', name: 'libDesc', message: 'Description', default: this.libDesc},
                 {
@@ -271,18 +202,14 @@ module.exports = yeoman.generators.Base.extend({
                     name: 'bintrayUser',
                     message: 'Bintray user name (used for badge generation only)',
                     default: this.helper.defaultValue('bintrayUser'),
-                    validate: function (input) {
-                        return !input ? 'Bintray user name required' : true;
-                    }
+                    validate: input => !input ? 'Bintray user name required' : true
                 },
                 {
                     type: 'input',
                     name: 'bintrayRepo',
                     message: 'Bintray maven repository name',
                     default: this.helper.defaultValue('bintrayRepo'),
-                    validate: function (input) {
-                        return !input ? 'Bintray repository name required' : true;
-                    }
+                    validate: input => !input ? 'Bintray repository name required' : true
                 },
                 {
                     type: 'confirm',
@@ -295,9 +222,7 @@ module.exports = yeoman.generators.Base.extend({
                     name: 'mavenCentralSync',
                     message: 'Should bintray publish to maven central on release?',
                     default: this.mavenCentralSync || true,
-                    when: function (props) {
-                        return props.bintraySignFiles;
-                    }
+                    when: props => props.bintraySignFiles
                 },
                 {
                     type: 'confirm',
@@ -307,41 +232,21 @@ module.exports = yeoman.generators.Base.extend({
                 }
             ];
 
-            this.prompt(prompts, function (props) {
-                questions.forEach(function (name) {
-                    var value = props[name];
-                    if (!_.isUndefined(value)) {
-                        this[name] = value;
-                    }
-                }.bind(this));
-                this.log();
-                done();
-            }.bind(this));
+            this.helper.prompt(prompts, questions);
         }
     },
 
     configuring: {
 
-        enforceFolderName: function () {
-            if (this.appname !== _.last(this.destinationRoot().split(path.sep))) {
-                this.destinationRoot(this.appname);
-            }
-            this.config.save();
-        },
+        configure: function () {
+            this.helper.selectTargetFolder();
+            this.helper.saveConfiguration(questions, globals);
 
-        updateConfig: function () {
-            questions.forEach(function (name) {
-                this.config.set(name, this[name]);
-                if (_.contains(globals, name)){
-                    this.helper.storeGlobal(name, this[name]);
-                }
-            }.bind(this));
             // synchronization with maven central is impossible on first release, but later
             // it must be set to true (if required)
             // so always set it as false on initial generation
             this.mavenCentralSync = this.context.updateMode && this.mavenCentralSync;
-            this.config.set('usedGeneratorVersion', this.context.pkg.version);
-            this.libTags = this.libTags.split(/\s*,\s*/);
+            this.libTags = this.helper.quoteTagsList(this.libTags);
         },
 
         selectJavaVersion: function () {
@@ -371,9 +276,7 @@ module.exports = yeoman.generators.Base.extend({
                 'README.md',
                 'gradle.properties',
                 'LICENSE',
-                'settings.gradle',
-                'build-deps.gradle',
-                'gradle/config/findbugs/exclude.xml'
+                'settings.gradle'
             ];
             this.gradlewExists = this.helper.exists('gradlew');
 
@@ -384,11 +287,7 @@ module.exports = yeoman.generators.Base.extend({
 
         sources: function () {
             if (!this.helper.exists('src/main')) {
-                var packageFolder = this.libPackage.replace(/\./g, '/');
-                this.helper.copyTpl('sources', {
-                    pathReplace: [
-                        {regex: /(^|\/)package(\/|$)/, replace: '$1' + packageFolder + '$2'}]
-                });
+                this.helper.copySources(this.libPackage, 'sources');
             } else {
                 this.log(chalk.yellow('     skip ') + 'sources generation');
             }
@@ -399,7 +298,7 @@ module.exports = yeoman.generators.Base.extend({
         chmod: function () {
             // setting executable flag manually
             if (!this.gradlewExists) {
-                this.helper.setExecutable('gradlew');
+                this.helper.setExecutableFlag('gradlew');
             }
         },
 
@@ -414,7 +313,7 @@ module.exports = yeoman.generators.Base.extend({
             if (bintrayCfg || (sonatypeCfg)) {
                 this.log();
                 this.log(chalk.red('IMPORTANT') + ' you need to add the following configurations to global gradle file (required for release): ' +
-                '\n ' + chalk.green(this.context.gradleConfPath));
+                    '\n ' + chalk.green(this.context.gradleConfPath));
                 if (bintrayCfg) {
                     this.log();
                     this.log(chalk.yellow('bintrayUser') + '=' + this.bintrayUser);
@@ -438,7 +337,7 @@ module.exports = yeoman.generators.Base.extend({
             if (!this.context.updateMode && this.config.get('mavenCentralSync')) {
                 this.log();
                 this.log(chalk.red('IMPORTANT') + ' Maven central sync is impossible on first release, so ' +
-                'it was set to false in build.gradle (read doc for more details).');
+                    'it was set to false in build.gradle (read doc for more details).');
                 this.log('Anyway your answer remembered and will be used on project update.');
             }
         }
