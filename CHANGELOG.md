@@ -1,3 +1,4 @@
+### 2.0.0 (2016-01-07)
 * Build logic extracted to gradle plugins. As a result, only one small build file required now:
     - removed build-deps.gradle
     - removed all geadle files inside gradle/ folder
