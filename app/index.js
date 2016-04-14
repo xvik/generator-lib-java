@@ -25,6 +25,19 @@ const questions = [
     'enableQualityChecks'  // true if quality checks enabled
 ];
 
+/* extra variables:
+ *  - year                   // 2015
+ *  - date                   // 02.12.2015
+ *  - reverseDate            // 2015-12-02
+ */
+
+/*
+ Templates syntax:
+ - <%= %> html escaped value
+ - <%- %> not escaped (raw) value
+ - <% %> any logic (script block)
+ */
+
 const globals = [
     'githubUser',
     'authorName',
@@ -33,7 +46,6 @@ const globals = [
     'bintrayUser',
     'bintrayRepo'
 ];
-
 
 module.exports = yeoman.generators.Base.extend({
 
