@@ -1,3 +1,4 @@
+### 2.1.0 (2016-04-15)
 * Update gradle-versions-plugin 0.11.3 -> 0.12.0
 * Update coveralls-gradle-plugin 2.4.0x -> 2.6.3
 * Update gradle-bintray-plugin 1.5 -> 1.6
