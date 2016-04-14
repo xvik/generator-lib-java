@@ -331,10 +331,11 @@ I usually use text from changelog as release message, but you may expand it with
 
 #### After first release
 
-Current bintray rest api did not allow to link github readme and changelog file automatically.
-So you will have to go to your package page and edit package: fill in github repository name (user/repo-name) and
-the name of changes file (CHANGELOG.md). After that click on 'readme' tab on package page and select 'github page'.
-Do the same on 'release notes' tab.
+Github repository name and changelog file will be [automatically configured](https://github.com/xvik/gradle-github-info-plugin#comjfrogbintray) 
+for bintray plugin. If you renamed changelog file from CHANGELOG.md then you will have to [specify it's name](https://github.com/xvik/gradle-github-info-plugin#available-properties)
+(or configure it manually on bintray package edit page).
+Go to your bintray package page, click on 'readme' tab and select 'github page'.
+Do the same on 'release notes' tab (to show CHANGELOG.md file).
 
 After actual release press 'add to jcenter' button to request jcenter linking (required for maven central publication
 and even if you don't want to sync to maven central, linking to jcenter will simplify library usage for end users).

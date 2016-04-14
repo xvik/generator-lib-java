@@ -263,8 +263,8 @@ module.exports = yeoman.generators.Base.extend({
 
         selectJavaVersion: function () {
             var signature = {
-                '1.6': 'org.codehaus.mojo.signature:java16-sun:+@signature',
-                '1.7': 'org.codehaus.mojo.signature:java17:+@signature',
+                '1.6': 'org.codehaus.mojo.signature:java16:1.1@signature',
+                '1.7': 'org.codehaus.mojo.signature:java17:1.0@signature',
                 '1.8': '' // switch off animalsniffer for the latest java
             };
             var travis = {
