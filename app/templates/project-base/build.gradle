@@ -13,7 +13,6 @@ plugins {
 }
 
 sourceCompatibility = <%= targetJava %>
-targetCompatibility = <%= targetJava %>
 
 wrapper {
     gradleVersion = 2.12
