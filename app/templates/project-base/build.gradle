@@ -16,7 +16,7 @@ sourceCompatibility = <%= targetJava %>
 targetCompatibility = <%= targetJava %>
 
 wrapper {
-    gradleVersion = 2.10
+    gradleVersion = 2.12
 }
 
 repositories { jcenter(); mavenCentral(); mavenLocal() }
