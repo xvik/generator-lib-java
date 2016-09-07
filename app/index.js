@@ -268,8 +268,8 @@ module.exports = yeoman.generators.Base.extend({
                 '1.8': '' // switch off animalsniffer for the latest java
             };
             var travis = {
-                '1.6': 'oraclejdk7', // better use oraclejdk, compatibility will be checked with animalsniffer
-                '1.7': 'oraclejdk7',
+                '1.6': 'oraclejdk8', // better use oraclejdk, compatibility will be checked with animalsniffer
+                '1.7': 'oraclejdk8',
                 '1.8': 'oraclejdk8'
             };
             this.animalsnifferSignature = signature[this.targetJava];
