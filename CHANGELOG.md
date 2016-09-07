@@ -1,3 +1,11 @@
+* Update gradle 2.12 -> 3.0
+* Update gradle-java-lib-plugin 1.0.1 -> 1.0.4
+* Update gradle-animalsniffer-plugin 1.0.1 -> 1.2.0
+* Update gradle-quality-plugin 1.3.0 -> 2.0.0
+* Update gradle-bintray-plugin 1.6 -> 1.7.1
+* Update gradle-versions-plugin 0.12.0 -> 0.13.0
+* Update gradle-release-plugin 2.3.5 -> 2.4.1  
+
 ### 2.1.0 (2016-04-15)
 * Update gradle-versions-plugin 0.11.3 -> 0.12.0
 * Update coveralls-gradle-plugin 2.4.0x -> 2.6.3
