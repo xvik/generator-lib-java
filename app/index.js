@@ -254,10 +254,12 @@ module.exports = yeoman.generators.Base.extend({
             this.helper.selectTargetFolder();
             this.helper.saveConfiguration(questions, globals);
 
-            // synchronization with maven central is impossible on first release, but later
-            // it must be set to true (if required)
-            // so always set it as false on initial generation
-            this.mavenCentralSync = this.context.updateMode && this.mavenCentralSync;
+            if (!this.context.updateMode) {
+                // synchronization with maven central is impossible on first release, but later
+                // it must be set to true (if required)
+                // so always set it as false on initial generation
+                this.mavenCentralSync = false;
+            }
             this.libTags = this.helper.quoteTagsList(this.libTags);
         },
 
@@ -268,7 +270,7 @@ module.exports = yeoman.generators.Base.extend({
                 '1.8': '' // switch off animalsniffer for the latest java
             };
             var travis = {
-                '1.6': 'oraclejdk8', // better use oraclejdk, compatibility will be checked with animalsniffer
+                '1.6': 'oraclejdk8', // jdk 8 required for quality tools, compatibility will be checked with animalsniffer
                 '1.7': 'oraclejdk8',
                 '1.8': 'oraclejdk8'
             };
@@ -280,10 +282,6 @@ module.exports = yeoman.generators.Base.extend({
     writing: {
         base: function () {
             var writeOnceFiles = [
-                'gradlew',
-                'gradlew.bat',
-                '.gitignore',
-                '.travis.yml',
                 'CHANGELOG.md',
                 'README.md',
                 'gradle.properties',

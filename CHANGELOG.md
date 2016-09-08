@@ -5,6 +5,9 @@
 * Update gradle-bintray-plugin 1.6 -> 1.7.1
 * Update gradle-versions-plugin 0.12.0 -> 0.13.0
 * Update gradle-release-plugin 2.3.5 -> 2.4.1  
+* Update mode:
+  - now able to overwrite travis,yml, .gitignore and gradle script files 
+  - fix maven central sync logic
 
 ### 2.1.0 (2016-04-15)
 * Update gradle-versions-plugin 0.11.3 -> 0.12.0

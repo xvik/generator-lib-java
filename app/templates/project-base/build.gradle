@@ -43,16 +43,16 @@ github {
 pom {
     developers {
         developer {
-            id "<%= githubUser %>"
-            name "<%= authorName %>"
-            email "<%= authorEmail %>"
+            id '<%= githubUser %>'
+            name '<%= authorName %>'
+            email '<%= authorEmail %>'
         }
     }
 }
 
 bintray {
-    user = project.hasProperty('bintrayUser') ? bintrayUser : 'USER'
-    key = project.hasProperty('bintrayKey') ? bintrayKey : 'KEY'
+    user = findProperty('bintrayUser')
+    key = findProperty('bintrayKey')
     publications = ['maven']
     dryRun = false
     publish = true
@@ -65,12 +65,12 @@ bintray {
         version {
             gpg {
                 sign = <%= bintraySignFiles %>
-                passphrase = project.hasProperty('gpgPassphrase') ? gpgPassphrase : ''
+                passphrase = findProperty('gpgPassphrase')
             }
             mavenCentralSync {
                 sync = <%= mavenCentralSync %>
-                user = project.hasProperty('sonatypeUser') ? sonatypeUser : 'USER'
-                password = project.hasProperty('sonatypePassword') ? sonatypePassword : 'PASSWORD'
+                user = findProperty('sonatypeUser')
+                password = findProperty('sonatypePassword')
             }
         }
     }
@@ -85,10 +85,10 @@ afterReleaseBuild {
 
 test {
     testLogging {
-        events "skipped", "failed", "standard_error"
-        exceptionFormat "full"
+        events 'skipped', 'failed', 'standard_error'
+        exceptionFormat 'full'
     }
-    maxHeapSize = "512m"
+    maxHeapSize = '512m'
 }
 
 dependencyUpdates.revision = 'release'
