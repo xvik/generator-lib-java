@@ -12,9 +12,9 @@ Features:
 * Feature 2
 
 ### Setup
-
-Releases are published to [bintray jcenter](https://bintray.com/bintray/jcenter) (package appear immediately after release) 
-and then to maven central (require few days after release to be published). 
+ 
+Releases are published to [bintray jcenter](https://bintray.com/<%= bintrayUser %>/<%= bintrayRepo %>/<%= libName %>/) and 
+[maven central](https://maven-badges.herokuapp.com/maven-central/<%= libGroup %>/<%= libName %>) 
 
 <!---
 [![JCenter](https://img.shields.io/bintray/v/<%= bintrayUser %>/<%= bintrayRepo %>/<%= libName %>.svg?label=jcenter)](https://bintray.com/<%= bintrayUser %>/<%= bintrayRepo %>/<%= libName %>/_latestVersion)
