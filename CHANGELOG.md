@@ -1,3 +1,4 @@
+### 2.2.0 (2016-09-09)
 * Update gradle 2.12 -> 3.0
 * Update gradle-java-lib-plugin 1.0.1 -> 1.0.4
 * Update gradle-animalsniffer-plugin 1.0.1 -> 1.2.0

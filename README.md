@@ -21,7 +21,14 @@ Features:
 * Code quality checks ([checkstyle](http://checkstyle.sourceforge.net/), [pmd](http://pmd.sourceforge.net/), [findbugs](http://findbugs.sourceforge.net/))
 * [Release process](https://github.com/researchgate/gradle-release#introduction) (like maven release)
 
-Requires jdk7 or above.
+Requires jdk8 or above (due to checkstyle [requirement](http://checkstyle.sourceforge.net/releasenotes.html#Release_7.0)). But actual library could target any java level (jdk8 is only required for build).
+
+### Known issue
+
+Gradle 2.13+ has a [bug with console input](https://issues.gradle.org/browse/GRADLE-3446). As a result, 
+during release version confirm questions are [not visible](https://github.com/researchgate/gradle-release/issues/185).
+
+Issue is not blocking and only affects release process: simply hit enter for questions (and be sure version in properties file is correct). 
 
 ### Thanks to
 
@@ -168,7 +175,7 @@ Look it and decide if you need it.
 $ gradlew check
 ```
 
-Runs code quality plugins. If quality checks were activated (asked during generation) do check before pushing to avoid
+Runs code quality plugins and tests. If quality checks were activated (asked during generation) do check before pushing to avoid
 build failures on travis. Moreover, it's easy to always keep everything clean instead of doing it before release.
 
 ```bash
