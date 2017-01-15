@@ -1,13 +1,13 @@
 'use strict';
 
-var path = require('path'),
-    assert = require('yeoman-generator').assert,
-    helpers = require('yeoman-generator').test,
+let path = require('path'),
+    assert = require('yeoman-assert'),
+    helpers = require('yeoman-test'),
     read = require('fs-readdir-recursive'),
     execFile = require('child_process').execFile;
 
 describe('lib-java generator', function () {
-    var appPath = path.join(__dirname, '../app'),
+    let appPath = path.join(__dirname, '../app'),
         targetPath = path.join(__dirname, 'temp');
 
     function dotfile(file) {
@@ -50,7 +50,7 @@ describe('lib-java generator', function () {
 
     it('creates valid project', function (done) {
         this.timeout(300000); //5 min should be enough to download everything
-        var isWin = /^win/.test(process.platform),
+        let isWin = /^win/.test(process.platform),
             targetFile = targetPath + '/testlib/gradlew' + (isWin ? '.bat' : '');
         execFile(targetFile, ['check'], function (err, stdout, stderr) {
             console.log(stdout);
