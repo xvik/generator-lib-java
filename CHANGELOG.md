@@ -1,3 +1,4 @@
+### 2.3.0 (2017-01-24)
 * Yeoman generator 1.0 compatibility
 * Update gradle 3.0 -> 3.3
 * Update gradle-bintray-plugin 1.7.1 -> 1.7.3
