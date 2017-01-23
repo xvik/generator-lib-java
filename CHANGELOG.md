@@ -1,3 +1,11 @@
+* Yeoman generator 1.0 compatibility
+* Update gradle 3.0 -> 3.3
+* Update gradle-bintray-plugin 1.7.1 -> 1.7.3
+* Update gradle-release-plugin 2.4.1 -> 2.5.0
+* Update coveralls-gradle-plugin 2.6.3 -> 2.7.1
+* Update gradle-quality-plugin 2.0.0 -> 2.1.0
+* Fix report path in showDependenciesTree task and remove deprecated left shift syntax
+
 ### 2.2.0 (2016-09-09)
 * Update gradle 2.12 -> 3.0
 * Update gradle-java-lib-plugin 1.0.1 -> 1.0.4
