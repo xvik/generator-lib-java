@@ -1,4 +1,4 @@
-#<%= libName %>
+# <%= libName %>
 [![License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://www.opensource.org/licenses/MIT)
 [![Build Status](http://img.shields.io/travis/<%= githubUser %>/<%= libName %>.svg?style=flat&branch=master)](https://travis-ci.org/<%= githubUser %>/<%= libName %>)
 [![Coverage Status](https://img.shields.io/coveralls/<%= githubUser %>/<%= libName %>.svg?style=flat)](https://coveralls.io/r/<%= githubUser %>/<%= libName %>?branch=master)
