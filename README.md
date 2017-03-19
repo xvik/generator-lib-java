@@ -1,4 +1,4 @@
-#Java library yeoman generator
+# Java library yeoman generator
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/xvik/generator-lib-java)
 [![License](http://img.shields.io/badge/license-MIT-blue.svg)](http://www.opensource.org/licenses/MIT)
