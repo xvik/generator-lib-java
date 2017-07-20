@@ -10,10 +10,10 @@ before_install:
   - chmod +x gradlew
 
 install:
-  - ./gradlew assemble
+  - ./gradlew assemble --no-daemon
 
 script:
-  - ./gradlew check
+  - travis_wait 20 ./gradlew check --no-daemon
 
 after_success:
   - ./gradlew jacocoTestReport coveralls
