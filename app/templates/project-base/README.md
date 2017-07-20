@@ -47,5 +47,5 @@ You can use snapshot versions through [JitPack](https://jitpack.io):
 
 ### Usage
 
--
+---
 [![java lib generator](http://img.shields.io/badge/Powered%20by-%20Java%20lib%20generator-green.svg?style=flat-square)](https://github.com/xvik/generator-lib-java)
