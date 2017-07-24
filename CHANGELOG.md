@@ -5,7 +5,9 @@
 * Update spock to 1.0 -> 1.1
 * Update travis config: 
     - increase check task timeout to 20 min
-    - disable gradle daemon ([recommended](https://docs.gradle.org/4.0.1/userguide/gradle_daemon.html#when_should_i_not_use_the_gradle_daemon)) 
+    - disable gradle daemon ([recommended](https://docs.gradle.org/4.0.1/userguide/gradle_daemon.html#when_should_i_not_use_the_gradle_daemon))
+    - remove TERM=dump (set automatically by travis)
+    - update cache management  
 
 ### 2.3.0 (2017-01-24)
 * Yeoman generator 1.0 compatibility
