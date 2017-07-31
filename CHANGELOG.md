@@ -1,7 +1,7 @@
 * Update gradle 3.3 -> 4.0.2
 * Update gradle-release-plugin 2.5.0 -> 2.6.0
 * Update gradle-quality-plugin 2.1.0 -> 2.3.0
-* Update gradle-animalsniffer-plugin 1.2.0 -> 1.3.0
+* Update gradle-animalsniffer-plugin 1.2.0 -> 1.4.1
 * Update gradle-versions-plugin 0.13.0 -> 0.15.0
 * Update spock to 1.0 -> 1.1
 * Update travis config: 
