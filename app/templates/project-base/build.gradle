@@ -15,7 +15,7 @@ plugins {
 sourceCompatibility = <%= targetJava %>
 
 wrapper {
-    gradleVersion = '4.0.2'
+    gradleVersion = '4.1'
 }
 
 repositories { jcenter(); mavenCentral(); mavenLocal() }
