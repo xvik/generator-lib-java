@@ -4,6 +4,7 @@
 * Update gradle-animalsniffer-plugin 1.2.0 -> 1.4.1
 * Update gradle-versions-plugin 0.13.0 -> 0.15.0
 * Update gradle-java-lib-plugin 1.0.4 -> 1.0.5
+* Update coveralls-gradle-plugin 2.7.1 -> 2.8.1
 * Update spock to 1.0 -> 1.1
 * Update travis config: 
     - increase check task timeout to 20 min
