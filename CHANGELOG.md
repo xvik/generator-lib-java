@@ -1,3 +1,5 @@
+* Update gradle 4.1 -> 4.6
+
 ### 2.4.0 (2017-08-19)
 * Update gradle 3.3 -> 4.1
 * Update gradle-release-plugin 2.5.0 -> 2.6.0
