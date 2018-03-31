@@ -1,4 +1,9 @@
 * Update gradle 4.1 -> 4.6
+* Update gradle-quality-plugin 2.3.0 -> 3.0.0
+* Update gradle-animalsniffer-plugin 1.4.1 -> 1.4.3
+* Update gradle-bintray-plugin 1.7.3 -> 1.8.0
+* Update gradle-versions-plugin 0.15.0 -> 0.17.0
+* Use spotbugs-annotations dependency instead of jsr305
 
 ### 2.4.0 (2017-08-19)
 * Update gradle 3.3 -> 4.1
