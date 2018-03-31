@@ -1,7 +1,7 @@
 # <%= libName %>
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://www.opensource.org/licenses/MIT)
 [![Build Status](https://img.shields.io/travis/<%= githubUser %>/<%= libName %>.svg?style=flat&branch=master)](https://travis-ci.org/<%= githubUser %>/<%= libName %>)
-[![Appveyor build status](https://ci.appveyor.com/api/projects/status/github/<%= githubUser %>/<%= libName %>?svg=true)](https://ci.appveyor.com/project/<%= libName %>/<%= projectName %>)
+[![Appveyor build status](https://ci.appveyor.com/api/projects/status/github/<%= githubUser %>/<%= libName %>?svg=true)](https://ci.appveyor.com/project/<%= libName %>/<%= libName %>)
 [![codecov](https://codecov.io/gh/<%= githubUser %>/<%= libName %>/branch/master/graph/badge.svg)](https://codecov.io/gh/<%= githubUser %>/<%= libName %>)
 
 
@@ -19,7 +19,7 @@ Releases are published to [bintray jcenter](https://bintray.com/<%= bintrayUser 
 [maven central](https://maven-badges.herokuapp.com/maven-central/<%= libGroup %>/<%= libName %>) 
 
 <!---
-[![JCenter](https://api.bintray.com/packages/<%= bintrayUser %>/<%= bintrayRepo %>/<%= libName %>/images/download.svg)](https://bintray.com/<%= bintrayUser %>/<%= libName %>/<%= projectName %>/_latestVersion)
+[![JCenter](https://api.bintray.com/packages/<%= bintrayUser %>/<%= bintrayRepo %>/<%= libName %>/images/download.svg)](https://bintray.com/<%= bintrayUser %>/<%= libName %>/<%= libName %>/_latestVersion)
 [![Maven Central](https://img.shields.io/maven-central/v/<%= libGroup %>/<%= libName %>.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/<%= libGroup %>/<%= libName %>)
 -->
 
