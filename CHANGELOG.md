@@ -9,6 +9,9 @@
     - Coverage uploaded to codecov (with windows flag)
 * Update travis config: coverage sent to [codecov](https://codecov.io/) (with linux tag)
 * Remove coveralls plugin (switch from coveralls to codecov because it could merge coverages from different platforms)    
+* Update README:
+    - Add appveyor and codecov badges (instead of coveralls)    
+    - Replace jcenter badge from shields to bintray native badge (because shields bintray support not working)
 
 ### 2.4.0 (2017-08-19)
 * Update gradle 3.3 -> 4.1
