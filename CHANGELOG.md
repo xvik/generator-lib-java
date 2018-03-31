@@ -4,6 +4,11 @@
 * Update gradle-bintray-plugin 1.7.3 -> 1.8.0
 * Update gradle-versions-plugin 0.15.0 -> 0.17.0
 * Use spotbugs-annotations dependency instead of jsr305
+* Add windows build via [appveyor](https://www.appveyor.com/) 
+    - New file .appveyor.yml
+    - Coverage uploaded to codecov (with windows flag)
+* Update travis config: coverage sent to [codecov](https://codecov.io/) (with linux tag)
+* Remove coveralls plugin (switch from coveralls to codecov because it could merge coverages from different platforms)    
 
 ### 2.4.0 (2017-08-19)
 * Update gradle 3.3 -> 4.1
