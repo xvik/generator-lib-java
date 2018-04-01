@@ -1,3 +1,4 @@
+### 2.5.0 (2018-04-02)
 * Update gradle 4.1 -> 4.6
 * Update gradle-quality-plugin 2.3.0 -> 3.0.0
 * Update gradle-animalsniffer-plugin 1.4.1 -> 1.4.3

@@ -15,8 +15,8 @@ Features:
 * [Maven central](http://search.maven.org/) compatible artifacts (jar, sources, javadocs)
 * Ready for [spock](http://spockframework.org) tests ([documentation](http://docs.spockframework.org))
 * [Bintray](https://bintray.com/) publication (+ jars signing and maven central publishing)
-* [Travis-ci](https://travis-ci.org/) integration (CI and healthy badge)
-* [Coveralls](http://coveralls.io/) integration (code coverage badge)
+* CI: [travis](https://travis-ci.org/) (linux), [appveyor](https://www.appveyor.com/) (windows)
+* Coverage with jacoco, merged from both win and linux builds in [codecov.io](https://codecov.io/)
 * Target jdk compatibility check with [animal sniffer](http://mojo.codehaus.org/animal-sniffer/) (you may use newer jdk to build, and keep compatibility with older jdk)
 * Code quality checks ([checkstyle](http://checkstyle.sourceforge.net/), [pmd](http://pmd.sourceforge.net/), [findbugs](http://findbugs.sourceforge.net/))
 * [Release process](https://github.com/researchgate/gradle-release#introduction) (like maven release)
@@ -142,9 +142,12 @@ Create [github](https://github.com) repo matching your library name and push pro
 
 In github project settings go to `Webhooks & services` and add `travis-ci` service.
 
-Go to [travis](https://travis-ci.org/) and enable your repo.
+Enable repository on services:
+* [travis](https://travis-ci.org/)
+* [appveyor](https://www.appveyor.com/) 
 
-Go to [coveralls](http://coveralls.io/) and enable your repo.
+And after next commit windows and linux builds will be performed automatically and combined coverage report
+will be available on [codecov](https://codecov.io/) (badges for all services are already generated in readme). 
 
 Bintray and maven central badges are generated in readme, but commented (uncomment before release).
 
@@ -168,6 +171,11 @@ will get much more feedback (something people will never post as issue or write 
 
 Gitter badge is not generated automatically, because it's not required as other services and it's too easy to add at any time.
 Look it and decide if you need it.
+
+### Documentation
+
+You can use [gradle-mkdocs-plugin](https://github.com/xvik/gradle-mkdocs-plugin) for writing versioned project documentation
+(published on github pages).
 
 ### Project usage
 
@@ -225,7 +233,6 @@ Used gradle plugins:
 * [findbugs](http://www.gradle.org/docs/current/userguide/findbugs_plugin.html) to find potential bugs with [findbugs](http://findbugs.sourceforge.net/)
 * [com.jfrog.bintray](https://github.com/bintray/gradle-bintray-plugin) for bintray publishing
 * [com.github.ben-manes.versions](https://github.com/ben-manes/gradle-versions-plugin) to check dependencies versions updates
-* [com.github.kt3k.coveralls](https://github.com/kt3k/coveralls-gradle-plugin) to send coverage report to coveralls
 * [net.researchgate.release](https://github.com/researchgate/gradle-release) for release (see [article](http://www.sosaywecode.com/gradle-release-plugin/) for additional plugin details)
 * [ru.vyarus.pom](https://github.com/xvik/gradle-pom-plugin) for simpler pom generation
 * [ru.vyarus.java-lib](https://github.com/xvik/gradle-java-lib-plugin) to prepare java artifacts setup
@@ -240,13 +247,13 @@ Optional and provided dependencies support provided by [ru.vyarus.pom plugin](ht
 Example usage:
 
 ```groovy
-provided 'com.google.code.findbugs:jsr305:3.0.0'
+provided 'com.github.spotbugs:spotbugs-annotations:3.1.2'
 ```
 
 or
 
 ```groovy
-optional 'com.google.code.findbugs:jsr305:3.0.0'
+optional 'com.github.spotbugs:spotbugs-annotations:3.1.2'
 ```
 
 In generated pom these dependencies will be defined as provided or optional, but for gradle build it's
@@ -278,9 +285,9 @@ When no signatures defined, no check will be performed.
 Quality tools are configured by [ru.vyarus.quality plugin](https://github.com/xvik/gradle-quality-plugin).
 
 Read more about quality tools specifics and how to suppress warnings:
-* [checkstyle](https://github.com/xvik/gradle-quality-plugin#checkstyle)
-* [pmd](https://github.com/xvik/gradle-quality-plugin#pmd)
-* [findbugs](https://github.com/xvik/gradle-quality-plugin#findbugs)
+* [checkstyle](http://xvik.github.io/gradle-quality-plugin/3.0.0/tool/checkstyle/)
+* [pmd](http://xvik.github.io/gradle-quality-plugin/3.0.0/tool/pmd/)
+* [spotbugs](http://xvik.github.io/gradle-quality-plugin/3.0.0/tool/spotbugs/)
 
 By default, quality checks fail build if any violation found. In order to simply report violations do:
 
