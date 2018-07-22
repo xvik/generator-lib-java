@@ -1,4 +1,9 @@
 * Update gradle 4.6 -> 4.8.1
+* Update et.researchgate.release 2.6.0 -> 2.7.0
+* Update com.jfrog.bintray 1.8.0 -> 1.8.4
+* Update com.github.ben-manes.versions 0.17.0 -> 0.20.0
+* Update ru.vyarus.java-lib 1.0.5 -> 1.1.2
+* Update ru.vyarus.quality 3.0.0 -> 3.1.1
 
 ### 2.5.0 (2018-04-02)
 * Update gradle 4.1 -> 4.6
