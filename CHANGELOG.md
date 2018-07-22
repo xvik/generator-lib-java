@@ -1,3 +1,5 @@
+* Update gradle 4.6 -> 4.8.1
+
 ### 2.5.0 (2018-04-02)
 * Update gradle 4.1 -> 4.6
 * Update gradle-quality-plugin 2.3.0 -> 3.0.0
