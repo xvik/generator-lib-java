@@ -1,6 +1,6 @@
 {
   "name": "generator-lib-java",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "description": "Java library project generator, hosted on github, build with gradle and published to bintray and maven central",
   "license": "MIT",
   "main": "app/index.js",
