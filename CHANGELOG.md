@@ -1,4 +1,5 @@
 * Update gradle 4.8.1 -> 5.6.3
+* Enable gradle build scan for failed builds
 
 ### 2.6.0 (2018-07-22)
 * Update gradle 4.6 -> 4.8.1
