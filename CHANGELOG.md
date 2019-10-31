@@ -7,6 +7,7 @@
 * Update spock to 1.1 -> 1.2
 * Add io.spring.dependency-management plugin for BOM management (instead of gradle core support)
 * Add Automatic-Module-Name in manifest for java 11
+* Travis changes: add build matrix with jdk11, use openjdk8, lock to xenial disto
 
 ### 2.6.0 (2018-07-22)
 * Update gradle 4.6 -> 4.8.1

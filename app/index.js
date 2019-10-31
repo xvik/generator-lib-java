@@ -274,9 +274,9 @@ module.exports = class extends JavaGenerator {
             '1.8': '' // switch off animalsniffer for the latest java
         };
         const travis = {
-            '1.6': 'oraclejdk8', // jdk 8 required for quality tools, compatibility will be checked with animalsniffer
-            '1.7': 'oraclejdk8',
-            '1.8': 'oraclejdk8'
+            '1.6': 'openjdk8', // jdk 8 required for quality tools, compatibility will be checked with animalsniffer
+            '1.7': 'openjdk8',
+            '1.8': 'openjdk8'
         };
         this.animalsnifferSignature = signature[this.targetJava];
         this.travisJdk = travis[this.targetJava];

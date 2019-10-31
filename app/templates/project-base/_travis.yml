@@ -1,7 +1,14 @@
 language: java
-jdk: <%= travisJdk %>
-sudo: false
+dist: xenial
+
+matrix:
+  include:
+    - jdk: <%= travisJdk %>
+    - jdk: openjdk11
+
 before_install: chmod +x gradlew
+env:
+  - TRAVIS=true
 
 install: ./gradlew assemble --no-daemon
 script: travis_wait 20 ./gradlew check --no-daemon
