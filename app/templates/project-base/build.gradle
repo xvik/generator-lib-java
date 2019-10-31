@@ -20,7 +20,7 @@ wrapper {
 }
 
 ext {
-    groocy = '2.5.7'
+    groovy = '2.5.7'
     slf4j = '1.7.28'
 }
 
