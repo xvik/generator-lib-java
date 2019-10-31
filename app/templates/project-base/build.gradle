@@ -19,23 +19,42 @@ wrapper {
     gradleVersion = '5.6.3'
 }
 
+ext {
+    groocy = '2.5.7'
+    slf4j = '1.7.28'
+}
+
 repositories { jcenter(); mavenCentral(); mavenLocal() }
-// Use for BOM declaration
-//dependencyManagement {
+dependencyManagement {
+    // Use for BOM declaration
 //    imports {
 //        mavenBom "group:artifact:version"
 //    }
-//}
+    dependencies {
+        dependency 'org.spockframework:spock-core:1.2-groovy-2.5'
+        // groovy bundled with spock (2.5.2) does not work well with java 11
+        dependency "org.codehaus.groovy:groovy:$groovy"
+        dependency "org.codehaus.groovy:groovy-json:$groovy"
+        dependency "org.codehaus.groovy:groovy-macro:$groovy"
+        dependency "org.codehaus.groovy:groovy-nio:$groovy"
+        dependency "org.codehaus.groovy:groovy-sql:$groovy"
+        dependency "org.codehaus.groovy:groovy-templates:$groovy"
+        dependency "org.codehaus.groovy:groovy-test:$groovy"
+        dependency "org.codehaus.groovy:groovy-xml:$groovy"
+
+        dependency "org.slf4j:slf4j-api:$slf4j"
+    }
+}
 dependencies {
     <% if (animalsnifferSignature) { %>signature '<%= animalsnifferSignature %>'
 
     <% } %>provided 'com.github.spotbugs:spotbugs-annotations:3.1.2'
 
-    compile 'org.slf4j:slf4j-api:1.7.28'
+    compile 'org.slf4j:slf4j-api'
 
     testCompile 'ch.qos.logback:logback-classic:1.2.3'
-    testCompile 'org.slf4j:jul-to-slf4j:1.7.28'
-    testCompile 'org.spockframework:spock-core:1.2-groovy-2.5'
+    testCompile "org.slf4j:jul-to-slf4j:$slf4j"
+    testCompile 'org.spockframework:spock-core'
 }
 
 group = '<%= libGroup %>'
