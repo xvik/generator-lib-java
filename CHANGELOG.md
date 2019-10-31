@@ -5,6 +5,7 @@
 * Update gradle-animalsniffer-plugin 1.4.3 -> 1.5.0
 * Update com.github.ben-manes.versions 0.20.0 -> 0.27.0
 * Update spock to 1.1 -> 1.2
+* Add io.spring.dependency-management plugin for BOM management (instead of gradle core support)
 
 ### 2.6.0 (2018-07-22)
 * Update gradle 4.6 -> 4.8.1

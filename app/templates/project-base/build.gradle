@@ -10,6 +10,7 @@ plugins {
     id 'com.jfrog.bintray' version '1.8.4'
     id 'net.researchgate.release' version '2.8.1'
     id 'com.github.ben-manes.versions' version '0.27.0'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 }
 
 sourceCompatibility = <%= targetJava %>
@@ -19,6 +20,12 @@ wrapper {
 }
 
 repositories { jcenter(); mavenCentral(); mavenLocal() }
+// Use for BOM declaration
+//dependencyManagement {
+//    imports {
+//        mavenBom "group:artifact:version"
+//    }
+//}
 dependencies {
     <% if (animalsnifferSignature) { %>signature '<%= animalsnifferSignature %>'
 
