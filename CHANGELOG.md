@@ -1,3 +1,5 @@
+* Update gradle 4.8.1 -> 5.6.3
+
 ### 2.6.0 (2018-07-22)
 * Update gradle 4.6 -> 4.8.1
 * Update et.researchgate.release 2.6.0 -> 2.7.0
