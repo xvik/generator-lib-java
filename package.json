@@ -16,7 +16,7 @@
     "url": "https://github.com/xvik"
   },
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8.5.0"
   },
   "scripts": {
     "test": "mocha"
@@ -34,14 +34,14 @@
     "maven central"
   ],
   "dependencies": {
-    "chalk": "1.1.3",
-    "yo-java-helper": "2.0.0"
+    "chalk": "2.4.2",
+    "yo-java-helper": "2.1.0"
   },
   "devDependencies": {
-    "fs-readdir-recursive": "1.0.0",
+    "fs-readdir-recursive": "1.1.0",
     "mocha": "*",
     "mocha-jshint": "2.3.1",
-    "yeoman-assert": "2.2.2",
-    "yeoman-test": "1.6.0"
+    "yeoman-assert": "3.1.1",
+    "yeoman-test": "2.0.0"
   }
 }
