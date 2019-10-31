@@ -56,6 +56,13 @@ pom {
     }
 }
 
+// java 11 auto module name
+jar {
+    manifest {
+        attributes 'Automatic-Module-Name': "$project.group.$project.name"
+    }
+}
+
 bintray {
     user = findProperty('bintrayUser')
     key = findProperty('bintrayKey')
