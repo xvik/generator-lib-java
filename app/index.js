@@ -7,6 +7,9 @@ const chalk = require('chalk'),
  * Generator variables, available for templates:
  */
 const questions = [
+    'multiModule',          // multi module project
+    'modulePrefix',         // multi-module project's modules prefix
+    'moduleName',           // multi-module project's module name
     'githubUser',           // github user name
     'authorName',           // author full name
     'authorEmail',          // author email
@@ -64,6 +67,7 @@ module.exports = class extends JavaGenerator {
     }
 
     initializing() {
+
         // init
         this.$initConfig(questions);
         this.$initDateVars();
@@ -103,6 +107,28 @@ module.exports = class extends JavaGenerator {
         let githubData = {},
             gen = this,
             prompts = [
+                {
+                    type: 'confirm',
+                    name: 'multiModule',
+                    message: 'Create multi-module project?',
+                    default: this.$defaultValue('multiModule')
+                },
+                {
+                    type: 'input',
+                    name: 'modulePrefix',
+                    message: 'Modules prefix ({prefix}-name)',
+                    default: this.$defaultValue('modulePrefix', 'project'),
+                    when: props => props.multiModule,
+                    validate: input => !input ? 'Prefix required' : true
+                },
+                {
+                    type: 'input',
+                    name: 'moduleName',
+                    message: 'Module name (prefix-{name})',
+                    default: this.$defaultValue('moduleName', 'module'),
+                    when: props => props.multiModule,
+                    validate: input => !input ? 'Module name required' : true
+                },
                 {
                     type: 'input',
                     name: 'githubUser',
@@ -297,11 +323,41 @@ module.exports = class extends JavaGenerator {
 
         this.$copyTpl('project-base', {writeOnceFiles: writeOnceFiles});
 
-        // sources
-        if (!this.$exists('src/main')) {
-            this.$copySources(this.libPackage, 'sources');
+        if (this.multiModule) {
+
+            // MULTI MODULE PROJECT
+            this.$copyTpl('project-multi', {writeOnceFiles: writeOnceFiles});
+            // generate modules only once because module would be obviously renamed after initial generation
+            if (!this.context.updateMode) {
+                this.$copyTpl('project-multi-bom', {
+                    writeOnceFiles: writeOnceFiles,
+                    targetFolder: this.modulePrefix + '-bom'
+                });
+                const moduleDir = this.modulePrefix + '-' + this.moduleName;
+                this.$copyTpl('project-multi-module', {
+                    writeOnceFiles: writeOnceFiles,
+                    targetFolder: moduleDir
+                });
+                const packageFolder = this.libPackage.replace(/\./g, '/');
+                this.$copyTpl('sources', {
+                    pathReplace: [
+                        {regex: /(^|\/)package(\/|$)/, replace: '$1' + packageFolder + '$2'}
+                    ],
+                    targetFolder: moduleDir
+                });
+            } else {
+                this.log(chalk.yellow('     skip ') + 'sources generation');
+            }
         } else {
-            this.log(chalk.yellow('     skip ') + 'sources generation');
+
+            // SINGLE PROJECT
+            this.$copyTpl('project-single', {writeOnceFiles: writeOnceFiles});
+            // sources
+            if (!this.$exists('src/main')) {
+                this.$copySources(this.libPackage, 'sources');
+            } else {
+                this.log(chalk.yellow('     skip ') + 'sources generation');
+            }
         }
     }
 

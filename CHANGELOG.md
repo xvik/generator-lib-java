@@ -9,6 +9,8 @@
 * Add Automatic-Module-Name in manifest for java 11
 * Travis changes: add build matrix with jdk11, use openjdk8, lock to xenial disto
 * Add jdk11 to appveyor build
+* Use shields badge instead of bintray badge (badge issue was fixed on shields side)
+* Add multi-module project generation
 
 ### 2.6.0 (2018-07-22)
 * Update gradle 4.6 -> 4.8.1

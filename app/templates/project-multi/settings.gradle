@@ -1,0 +1,4 @@
+rootProject.name = '<%= libName %>'
+
+include '<%= modulePrefix %>-bom',
+        '<%= modulePrefix %>-<%= moduleName %>'

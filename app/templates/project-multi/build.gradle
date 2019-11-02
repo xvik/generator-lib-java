@@ -1,0 +1,208 @@
+plugins {
+    id 'com.gradle.build-scan' version '3.0'
+    id 'ru.vyarus.java-lib' version '1.1.2' apply false
+    id 'ru.vyarus.github-info' version '1.1.0' apply false<% if (enableQualityChecks) { %><% if (animalsnifferSignature) { %>
+    id 'ru.vyarus.animalsniffer' version '1.5.0' apply false<% } %>
+    id 'ru.vyarus.quality' version '3.4.0' apply false<% } %>
+    id 'com.jfrog.bintray' version '1.8.4' apply false
+    id "io.spring.dependency-management" version "1.0.8.RELEASE" apply false
+
+    id 'base'
+    id 'jacoco'
+    id 'net.researchgate.release' version '2.8.1'
+    id 'com.github.ben-manes.versions' version '0.27.0'
+}
+
+wrapper {
+    gradleVersion = '5.6.3'
+}
+
+description = '<%= libDesc %>'
+
+allprojects {
+    apply plugin: 'project-report'
+    apply plugin: 'com.jfrog.bintray'
+
+    repositories { jcenter(); mavenCentral(); mavenLocal() }
+
+    bintray {
+        user = findProperty('bintrayUser')
+        key = findProperty('bintrayKey')
+        pkg {
+            repo = 'xvik'
+            name = rootProject.name
+            desc = rootProject.description
+            labels = [<%- libTags %>]
+            publicDownloadNumbers = true
+        }
+    }
+}
+
+subprojects {
+    apply plugin: 'groovy'
+    apply plugin: 'jacoco'
+    apply plugin: 'ru.vyarus.java-lib'<% if (animalsnifferSignature) { %>
+    apply plugin: 'ru.vyarus.animalsniffer'<% } %>
+    apply plugin: 'ru.vyarus.quality'
+    apply plugin: 'ru.vyarus.github-info'
+    apply plugin: 'com.github.ben-manes.versions'
+    apply plugin: 'io.spring.dependency-management'
+
+    sourceCompatibility = <%= targetJava %>
+
+    ext {
+        groovy = '2.5.7'
+        slf4j = '1.7.28'
+    }
+
+    dependencyManagement {
+        // Use for BOM declaration
+//      imports {
+//          mavenBom "group:artifact:version"
+//      }
+        dependencies {
+            dependency 'org.spockframework:spock-core:1.2-groovy-2.5'
+            // groovy bundled with spock (2.5.2) does not work well with java 11
+            dependency "org.codehaus.groovy:groovy:$groovy"
+            dependency "org.codehaus.groovy:groovy-json:$groovy"
+            dependency "org.codehaus.groovy:groovy-macro:$groovy"
+            dependency "org.codehaus.groovy:groovy-nio:$groovy"
+            dependency "org.codehaus.groovy:groovy-sql:$groovy"
+            dependency "org.codehaus.groovy:groovy-templates:$groovy"
+            dependency "org.codehaus.groovy:groovy-test:$groovy"
+            dependency "org.codehaus.groovy:groovy-xml:$groovy"
+
+            dependency "org.slf4j:slf4j-api:$slf4j"
+
+            // put all modules dependencies here in order to use BOM for version management
+        }
+    }
+    // common dependencies for all modules
+    dependencies {
+        <% if (animalsnifferSignature) { %>signature '<%= animalsnifferSignature %>'
+
+        <% } %>provided 'com.github.spotbugs:spotbugs-annotations:3.1.2'
+
+        compile 'org.slf4j:slf4j-api'
+
+        testCompile 'ch.qos.logback:logback-classic:1.2.3'
+        testCompile "org.slf4j:jul-to-slf4j:$slf4j"
+        testCompile 'org.spockframework:spock-core'
+    }
+
+    group = '<%= libGroup %>'
+
+    github {
+        user = '<%= githubUser %>'
+        repository = rootProject.name
+        license = 'MIT'
+        licenseUrl = github.rawFileUrl('LICENSE');
+        changelogFile = 'CHANGELOG.md'
+        vcsUrl = 'https://github.com/xvik/<%= libName %>'
+    }
+
+    pom {
+        developers {
+            developer {
+                id '<%= githubUser %>'
+                name '<%= authorName %>'
+                email '<%= authorEmail %>'
+            }
+        }
+    }
+
+    // java 11 auto module name
+    jar {
+        manifest {
+            attributes 'Automatic-Module-Name': "$rootProject.group.${project.name.replace('<%= modulePrefix %>-', rootProject.name)}"
+        }
+    }
+
+    bintray {
+        publications = ['maven']
+    }
+
+    test {
+        testLogging {
+            events 'skipped', 'failed'
+            exceptionFormat 'full'
+        }
+        maxHeapSize = '512m'
+    }
+
+    dependencyUpdates.revision = 'release'
+    jacocoTestReport.reports.xml.enabled = true
+
+
+    task showDependenciesTree(dependsOn: 'htmlDependencyReport', group: 'help', description:
+            'Generates dependencies tree report and opens it in browser') {
+        doLast {
+            java.awt.Desktop.getDesktop().open(file("build/reports/project/dependencies/root.${project.name}.html"))
+        }
+    }
+}
+
+/*
+ Each module published separately: subprojects simply upload files to bintray and root project will
+ publish/generate signatures/sync with maven central.
+ Note: plugin will find bintray tasks in submodules and depend on it so order will be always correct.
+ */
+bintray {
+    publish = true
+    pkg {
+        version {
+            gpg {
+                sign = <%= bintraySignFiles %>
+                passphrase = findProperty('gpgPassphrase')
+            }
+            mavenCentralSync {
+                sync = <%= mavenCentralSync %>
+                user = findProperty('sonatypeUser')
+                password = findProperty('sonatypePassword')
+            }
+        }
+    }
+}
+
+// by default, task depends on subproject tasks directly, which breaks dependencies graph
+bintrayUpload.dependsOn subprojects.collect { ":$it.name:bintrayUpload" }
+
+// dependency on all subprojects required for release validation
+check.dependsOn subprojects.check
+
+// release manages only root project (subprojects will be checked and released implicitly)
+afterReleaseBuild {
+    dependsOn = ['bintrayUpload']
+    doLast {
+        logger.warn "RELEASED $project.group:$project.name:$project.version"
+    }
+}
+
+task testReport(type: TestReport, description: 'Generates an aggregate test report') {
+    destinationDir = file("${buildDir}/reports/tests")
+    reportOn subprojects.test
+}
+
+task jacocoMerge(type: JacocoMerge, description: 'Merge coverage results for aggregated report generation') {
+    executionData = files(subprojects.collect {it.file('build/jacoco/test.exec')})
+    doFirst {
+        executionData = files(executionData.findAll { it.exists() })
+    }
+}
+
+task jacocoTestReport(type: JacocoReport, description: 'Generates aggregated coverage report') {
+    dependsOn jacocoMerge
+    executionData jacocoMerge.destinationFile
+    sourceDirectories.setFrom(files(subprojects.sourceSets.main.allSource.srcDirs))
+    classDirectories.setFrom(files(subprojects.sourceSets.main.output))
+    reports.xml.enabled = true
+}
+
+htmlDependencyReport.projects = allprojects
+
+buildScan {
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
+    publishOnFailure()
+}
+
