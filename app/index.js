@@ -111,7 +111,7 @@ module.exports = class extends JavaGenerator {
                     type: 'confirm',
                     name: 'multiModule',
                     message: 'Create multi-module project?',
-                    default: this.$defaultValue('multiModule')
+                    default: this.$defaultValue('multiModule', false)
                 },
                 {
                     type: 'input',
