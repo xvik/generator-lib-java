@@ -23,7 +23,7 @@ to unify versions management.
 
 ### Modules
 
-#### [<%= modulePrefix %>-<%= moduleName %>](<%= modulePrefix %>-<%= moduleName %>)
+#### [<%= moduleName %>](<%= modulePrefix %>-<%= moduleName %>)
 
 Module description.
 
