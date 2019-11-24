@@ -5,6 +5,7 @@ let path = require('path'),
     helpers = require('yeoman-test'),
     read = require('fs-readdir-recursive'),
     execFile = require('child_process').execFile,
+    fs = require('fs-extra'),
 
     appPath = path.join(__dirname, '../app'),
     targetPath = path.join(__dirname, 'temp');
@@ -70,6 +71,7 @@ describe('check simple app generation', function () {
     });
 
     it('creates valid project', function (done) {
+        fs.copySync(path.join(__dirname, 'sources'), targetPath + '/testlib/src/main/java');
         this.timeout(300000); //5 min should be enough to download everything
         runGradle(targetPath + '/testlib', done);
     });
@@ -107,12 +109,13 @@ describe('check multi-module app generation', function () {
         assert.file(read(appPath + '/templates/gradle-base'));
         assert.file(read(appPath + '/templates/project-base').map(dotfile));
         assert.file(read(appPath + '/templates/project-multi').map(dotfile));
-        assert.file(read(appPath + '/templates/project-multi/bom').map(subdir('foo-bom')));
-        assert.file(read(appPath + '/templates/project-multi/module').map(subdir('foo-sample')));
+        assert.file(read(appPath + '/templates/project-multi-modules/bom').map(subdir('foo-bom')));
+        assert.file(read(appPath + '/templates/project-multi-modules/module').map(subdir('foo-sample')));
         assert.file(read(appPath + '/templates/sources').map(dotfile).map(repackage).map(subdir('foo-sample')));
     });
 
     it('creates valid project', function (done) {
+        fs.copySync(path.join(__dirname, 'sources'), targetPath + '/testlib/foo-sample/src/main/java');
         this.timeout(300000); //5 min should be enough to download everything
         runGradle(targetPath + '/testlib', done);
     });

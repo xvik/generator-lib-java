@@ -38,6 +38,7 @@
     "yo-java-helper": "2.1.0"
   },
   "devDependencies": {
+    "fs-extra": "8.1.0",
     "fs-readdir-recursive": "1.1.0",
     "mocha": "*",
     "mocha-jshint": "2.3.1",
