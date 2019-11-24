@@ -1,3 +1,4 @@
+### 2.7.0 (2019-11-24)
 * Fix node compatibility: minimal required node is 8.5.0
 * Update gradle 4.8.1 -> 5.6.4
 * Enable gradle build scan for failed builds

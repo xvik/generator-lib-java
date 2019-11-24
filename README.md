@@ -10,6 +10,7 @@
 The main goal is to simplify new [github](https://github.com) java library setup.
 
 Features:
+* Single and multi-module projects generation
 * [MIT](http://opensource.org/licenses/MIT) license (hardcoded)
 * [Gradle](http://www.gradle.org/) build (with support of optional and provided dependencies)
 * [Maven central](http://search.maven.org/) compatible artifacts (jar, sources, javadocs)
@@ -239,6 +240,7 @@ Used gradle plugins:
 * [ru.vyarus.github-info](https://github.com/xvik/gradle-github-info-plugin) to fill in github specific data
 * [ru.vyarus.quality](https://github.com/xvik/gradle-quality-plugin) to configure quality plugins and provide advanced reporting
 * [ru.vyarus.animalsniffer](https://github.com/xvik/gradle-animalsniffer-plugin) to verify jdk backwards compatibility when building on newer jdk
+* [io.spring.dependency-management](https://github.com/xvik/gradle-animalsniffer-plugin) to use maven BOMs (plugin used instead of gradle native BOM's support as more correct)
 
 #### Optional dependencies
 
