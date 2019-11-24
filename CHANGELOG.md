@@ -1,7 +1,8 @@
+* Fix node compatibility: minimal required node is 8.5.0
 * Update gradle 4.8.1 -> 5.6.4
 * Enable gradle build scan for failed builds
 * Update et.researchgate.release 2.7.0 -> 2.8.1
-* Update ru.vyarus.quality 3.1.1 -> 3.4.0
+* Update ru.vyarus.quality 3.1.1 -> 4.0.0
 * Update gradle-animalsniffer-plugin 1.4.3 -> 1.5.0
 * Update com.github.ben-manes.versions 0.20.0 -> 0.27.0
 * Update spock to 1.1 -> 1.2
