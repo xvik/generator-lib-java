@@ -1,3 +1,4 @@
+### 2.8.0 (2020-01-26)
 * Update ru.vyarus.java-lib 1.1.2 -> 2.1.0
 * Update gradle-github-info-plugin 1.1.0 -> 1.2.0
 * Update io.spring.dependency-management 1.0.8 -> 1.0.9
