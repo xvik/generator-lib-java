@@ -39,12 +39,12 @@ Gradle:
 
 ```groovy
 plugins {
-    id "io.spring.dependency-management" version "1.0.8.RELEASE"
+    id "io.spring.dependency-management" version "1.0.9.RELEASE"
 }
 
 dependencyManagement {    
     imports {
-        mavenBom "<%= libGroup %>:<%= modulePrefix %>-<%= moduleName %>:<%= libVersion %>"
+        mavenBom "<%= libGroup %>:<%= modulePrefix %>-bom:<%= libVersion %>"
     }
 }
 
