@@ -259,7 +259,7 @@ optional 'com.github.spotbugs:spotbugs-annotations:3.1.2'
 ```
 
 In generated pom these dependencies will be defined as provided or optional, but for gradle build it's
-the same as declaring them in `compile` scope.
+the same as declaring them in `implementation` scope.
 
 jsr305 provided dependency is defined by default in generated project (useful to guide firebug). 
 

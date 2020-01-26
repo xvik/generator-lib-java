@@ -2,5 +2,5 @@ description = "Module description"
 
 dependencies {
     // module specific dependencies (version always declared in root module)
-//    compile 'com.foo:lib1'
+//    implementation 'com.foo:lib1'
 }

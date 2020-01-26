@@ -48,13 +48,13 @@ dependencyManagement {
 dependencies {
     <% if (animalsnifferSignature) { %>signature '<%= animalsnifferSignature %>'
 
-    <% } %>provided 'com.github.spotbugs:spotbugs-annotations:3.1.2'
+    <% } %>compileOnly 'com.github.spotbugs:spotbugs-annotations:3.1.2'
 
-    compile 'org.slf4j:slf4j-api'
+    implementation 'org.slf4j:slf4j-api'
 
-    testCompile 'ch.qos.logback:logback-classic:1.2.3'
-    testCompile "org.slf4j:jul-to-slf4j:$slf4j"
-    testCompile 'org.spockframework:spock-core'
+    testImplementation 'ch.qos.logback:logback-classic:1.2.3'
+    testImplementation "org.slf4j:jul-to-slf4j:$slf4j"
+    testImplementation 'org.spockframework:spock-core'
 }
 
 group = '<%= libGroup %>'

@@ -26,7 +26,7 @@ Maven:
 Gradle:
 
 ```groovy
-compile '<%= libGroup %>:<%= modulePrefix %>-<%= moduleName %>:<%= libVersion %>'
+implementation '<%= libGroup %>:<%= modulePrefix %>-<%= moduleName %>:<%= libVersion %>'
 ```
 
 See the most recent version in the badge above.

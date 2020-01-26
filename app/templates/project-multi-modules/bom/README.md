@@ -50,7 +50,7 @@ dependencyManagement {
 
 // declare modules without versions 
 dependencies {
-    compile '<%= libGroup %>:<%= modulePrefix %>-<%= moduleName %>'    
+    implementation '<%= libGroup %>:<%= modulePrefix %>-<%= moduleName %>'    
 }
     
 ```

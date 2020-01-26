@@ -2,6 +2,7 @@
 * Update gradle-github-info-plugin 1.1.0 -> 1.2.0
 * Update io.spring.dependency-management 1.0.8 -> 1.0.9
 * Update spock to 1.3
+* Remove deprecated compile configurations
 
 ### 2.7.0 (2019-11-24)
 * Fix node compatibility: minimal required node is 8.5.0

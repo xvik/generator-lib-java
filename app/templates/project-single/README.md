@@ -34,7 +34,7 @@ Maven:
 Gradle:
 
 ```groovy
-compile '<%= libGroup %>:<%= libName %>:<%= libVersion %>'
+implementation '<%= libGroup %>:<%= libName %>:<%= libVersion %>'
 ```
 
 ##### Snapshots
