@@ -1,3 +1,8 @@
+* Update ru.vyarus.java-lib 1.1.2 -> 2.1.0
+* Update gradle-github-info-plugin 1.1.0 -> 1.2.0
+* Update io.spring.dependency-management 1.0.8 -> 1.0.9
+* Update spock to 1.3
+
 ### 2.7.0 (2019-11-24)
 * Fix node compatibility: minimal required node is 8.5.0
 * Update gradle 4.8.1 -> 5.6.4
