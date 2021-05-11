@@ -1,5 +1,4 @@
 plugins {
-    id 'com.gradle.build-scan' version '3.0'
     id 'ru.vyarus.java-lib' version '2.1.0' apply false
     id 'ru.vyarus.github-info' version '1.2.0' apply false<% if (enableQualityChecks) { %><% if (animalsnifferSignature) { %>
     id 'ru.vyarus.animalsniffer' version '1.5.0' apply false<% } %>
@@ -14,7 +13,7 @@ plugins {
 }
 
 wrapper {
-    gradleVersion = '5.6.4'
+    gradleVersion = '6.9'
 }
 
 description = '<%= libDesc %>'
@@ -199,10 +198,3 @@ task jacocoTestReport(type: JacocoReport, description: 'Generates aggregated cov
 }
 
 htmlDependencyReport.projects = allprojects
-
-buildScan {
-    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
-    termsOfServiceAgree = 'yes'
-    publishOnFailure()
-}
-
