@@ -1,3 +1,5 @@
+* Minimal required node 12.10.0
+
 ### 2.8.0 (2020-01-26)
 * Update ru.vyarus.java-lib 1.1.2 -> 2.1.0
 * Update gradle-github-info-plugin 1.1.0 -> 1.2.0
