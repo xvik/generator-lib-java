@@ -57,12 +57,6 @@ describe('check simple app generation', () => {
                 libPackage: 'com.johnd.testlib',
                 libVersion: '0.1.0',
                 libDesc: 'Test library',
-                targetJava: '1.6',
-                libTags: 'java, sample,  lib',
-                bintrayUser: 'john',
-                bintrayRepo: 'mvn',
-                bintraySignFiles: true,
-                mavenCentralSync: true,
                 enableQualityChecks: true
             });
     });
@@ -99,12 +93,6 @@ describe('check multi-module app generation', () => {
                 libPackage: 'com.johnd.testlib',
                 libVersion: '0.1.0',
                 libDesc: 'Test library',
-                targetJava: '1.6',
-                libTags: 'java, sample,  lib',
-                bintrayUser: 'john',
-                bintrayRepo: 'mvn',
-                bintraySignFiles: true,
-                mavenCentralSync: true,
                 enableQualityChecks: true
             });
     });

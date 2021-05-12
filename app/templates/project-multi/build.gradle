@@ -1,7 +1,6 @@
 plugins {
     id 'ru.vyarus.java-lib' version '2.1.0' apply false
-    id 'ru.vyarus.github-info' version '1.2.0' apply false<% if (enableQualityChecks) { %><% if (animalsnifferSignature) { %>
-    id 'ru.vyarus.animalsniffer' version '1.5.0' apply false<% } %>
+    id 'ru.vyarus.github-info' version '1.2.0' apply false<% if (enableQualityChecks) { %>
     id 'ru.vyarus.quality' version '4.6.0' apply false<% } %>
     id "io.spring.dependency-management" version '1.0.9.RELEASE' apply false
 
@@ -28,14 +27,13 @@ subprojects {
     apply plugin: 'groovy'
     apply plugin: 'jacoco'
     apply plugin: 'signing'
-    apply plugin: 'ru.vyarus.java-lib'<% if (animalsnifferSignature) { %>
-    apply plugin: 'ru.vyarus.animalsniffer'<% } %>
+    apply plugin: 'ru.vyarus.java-lib'
     apply plugin: 'ru.vyarus.quality'
     apply plugin: 'ru.vyarus.github-info'
     apply plugin: 'com.github.ben-manes.versions'
     apply plugin: 'io.spring.dependency-management'
 
-    sourceCompatibility = <%= targetJava %>
+    sourceCompatibility = 1.8
 
     ext {
         groovy = '2.5.7'
@@ -66,9 +64,7 @@ subprojects {
     }
     // common dependencies for all modules
     dependencies {
-        <% if (animalsnifferSignature) { %>signature '<%= animalsnifferSignature %>'
-
-        <% } %>compileOnly 'com.github.spotbugs:spotbugs-annotations:3.1.2'
+        compileOnly 'com.github.spotbugs:spotbugs-annotations:3.1.2'
 
         implementation 'org.slf4j:slf4j-api'
 

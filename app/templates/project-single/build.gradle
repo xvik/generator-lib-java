@@ -4,15 +4,14 @@ plugins {
     id 'project-report'
     id 'signing'
     id 'ru.vyarus.java-lib' version '2.1.0'
-    id 'ru.vyarus.github-info' version '1.2.0'<% if (enableQualityChecks) { %><% if (animalsnifferSignature) { %>
-    id 'ru.vyarus.animalsniffer' version '1.5.0'<% } %>
+    id 'ru.vyarus.github-info' version '1.2.0'<% if (enableQualityChecks) { %>
     id 'ru.vyarus.quality' version '4.6.0'<% } %>
     id 'net.researchgate.release' version '2.8.1'
     id 'com.github.ben-manes.versions' version '0.38.0'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 }
 
-sourceCompatibility = <%= targetJava %>
+sourceCompatibility = 1.8
 
 wrapper {
     gradleVersion = '6.9'
@@ -45,9 +44,7 @@ dependencyManagement {
     }
 }
 dependencies {
-    <% if (animalsnifferSignature) { %>signature '<%= animalsnifferSignature %>'
-
-    <% } %>compileOnly 'com.github.spotbugs:spotbugs-annotations:3.1.2'
+    compileOnly 'com.github.spotbugs:spotbugs-annotations:3.1.2'
 
     implementation 'org.slf4j:slf4j-api'
 

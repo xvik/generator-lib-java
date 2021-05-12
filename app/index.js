@@ -18,12 +18,6 @@ const questions = [
     'libPackage',           // base package
     'libVersion',           // library version
     'libDesc',              // library description
-    'targetJava',           // target java version (lowest supported), it's not the jdk we build with
-    'libTags',              // tags for bintray package (array)
-    'bintrayUser',          // bintray user name
-    'bintrayRepo',          // target bintray maven repository name
-    'bintraySignFiles',    // true if files signing enabled
-    'mavenCentralSync',    // true to sync with maven central (must be false on first release)
     'enableQualityChecks'  // true if quality checks enabled
 ];
 
@@ -44,9 +38,7 @@ const globals = [
     'githubUser',
     'authorName',
     'authorEmail',
-    'libGroup',
-    'bintrayUser',
-    'bintrayRepo'
+    'libGroup'
 ];
 
 module.exports = class extends JavaGenerator {
@@ -203,50 +195,6 @@ module.exports = class extends JavaGenerator {
                     when: disableOnUpdate
                 },
                 {
-                    type: 'list',
-                    name: 'targetJava',
-                    message: 'Target java version (the lowest version you want to be compatible with)',
-                    default: this.targetJava || '1.6',
-                    choices: [
-                        {value: '1.6', name: 'Java 6'},
-                        {value: '1.7', name: 'Java 7'},
-                        {value: '1.8', name: 'Java 8'}
-                    ]
-                },
-                {
-                    type: 'input',
-                    name: 'libTags',
-                    message: 'Tags for bintray package (comma separated list)',
-                    default: this.libTags
-                },
-                {
-                    type: 'input',
-                    name: 'bintrayUser',
-                    message: 'Bintray user name (used for badge generation only)',
-                    default: this.$defaultValue('bintrayUser'),
-                    validate: input => !input ? 'Bintray user name required' : true
-                },
-                {
-                    type: 'input',
-                    name: 'bintrayRepo',
-                    message: 'Bintray maven repository name',
-                    default: this.$defaultValue('bintrayRepo'),
-                    validate: input => !input ? 'Bintray repository name required' : true
-                },
-                {
-                    type: 'confirm',
-                    name: 'bintraySignFiles',
-                    message: 'Should bintray sign files on release (bintray must be configured accordingly)?',
-                    default: this.bintraySignFiles || true
-                },
-                {
-                    type: 'confirm',
-                    name: 'mavenCentralSync',
-                    message: 'Should bintray publish to maven central on release?',
-                    default: this.mavenCentralSync || true,
-                    when: props => props.bintraySignFiles
-                },
-                {
                     type: 'confirm',
                     name: 'enableQualityChecks',
                     message: 'Enable code quality checks (checkstyle, pmd, findbugs)?',
@@ -284,28 +232,6 @@ module.exports = class extends JavaGenerator {
         // configure
         this.$selectTargetFolder();
         this.$saveConfiguration(questions, globals);
-
-        if (!this.context.updateMode) {
-            // synchronization with maven central is impossible on first release, but later
-            // it must be set to true (if required)
-            // so always set it as false on initial generation
-            this.mavenCentralSync = false;
-        }
-        this.libTags = this.$quoteTagsList(this.libTags);
-
-        // select java version
-        const signature = {
-            '1.6': 'org.codehaus.mojo.signature:java16:1.1@signature',
-            '1.7': 'org.codehaus.mojo.signature:java17:1.0@signature',
-            '1.8': '' // switch off animalsniffer for the latest java
-        };
-        const travis = {
-            '1.6': 'openjdk8', // jdk 8 required for quality tools, compatibility will be checked with animalsniffer
-            '1.7': 'openjdk8',
-            '1.8': 'openjdk8'
-        };
-        this.animalsnifferSignature = signature[this.targetJava];
-        this.travisJdk = travis[this.targetJava];
     }
 
     writing() {
@@ -370,41 +296,28 @@ module.exports = class extends JavaGenerator {
 
         // check gradle config
         let conf = this.context.gradleConf || {},
-            warnBintray = !conf.bintrayUser || !conf.bintrayKey,
-            warnSign = this.bintraySignFiles && !conf.gpgPassphrase,
-            warnCentral = this.config.get('mavenCentralSync') && (!conf.sonatypeUser || !conf.sonatypePassword);
+            warnSign = !conf['signing.keyId'] || !conf['signing.secretKeyRingFile'],
+            warnCentral = !conf.sonatypeUser || !conf.sonatypePassword;
 
-        if (!warnBintray && !warnSign && !warnCentral) {
+        if (!warnSign && !warnCentral) {
             return;
         }
 
         this.log();
         this.log(chalk.red('IMPORTANT') + ' you need to add the following configurations to global gradle file (required for release): ' +
             '\n ' + chalk.green(this.context.gradleConfPath));
-        if (warnBintray) {
-            this.log();
-            this.log(chalk.yellow('bintrayUser') + '=' + this.bintrayUser);
-            this.log(chalk.yellow('bintrayKey') + '=<api key (go to bintray profile page, hit edit and access "api keys" section>');
-        }
         if (warnSign) {
             this.log();
-            this.log('If your gpg certificate requires passphrase you need to configure it (for automatic signing):');
-            this.log(chalk.yellow('gpgPassphrase') + '=<gpgPassphrase>');
+            this.log('For release artifacts signing:');
+            this.log(chalk.yellow('signing.keyId') + '=<certificate id>');
+            this.log(chalk.yellow('signing.password') + '=<password (empty if not set)>');
+            this.log(chalk.yellow('signing.secretKeyRingFile') + '=<path to cetrificate file>');
         }
         if (warnCentral) {
             this.log();
-            this.log('If you going to automatically sync with maven central, you need to configure sonatype user:');
+            this.log('For maven central publication:');
             this.log(chalk.yellow('sonatypeUser') + '=<sonatype user>');
             this.log(chalk.yellow('sonatypePassword') + '=<sonatype password>');
-        }
-
-
-        // maven central notice
-        if (!this.context.updateMode && this.config.get('mavenCentralSync')) {
-            this.log();
-            this.log(chalk.red('IMPORTANT') + ' Maven central sync is impossible on first release, so ' +
-                'it was set to false in build.gradle (read doc for more details).');
-            this.log('Anyway your answer remembered and will be used on project update.');
         }
     }
 };

@@ -2,7 +2,7 @@
   "name": "generator-lib-java",
   "version": "3.0.0",
   "type": "commonjs",
-  "description": "Java library project generator, hosted on github, build with gradle and published to bintray and maven central",
+  "description": "Java library project generator, hosted on github, build with gradle and published to maven central",
   "license": "MIT",
   "main": "app/index.js",
   "homepage": "https://github.com/xvik/generator-lib-java",
@@ -31,7 +31,6 @@
     "lib",
     "gradle",
     "github",
-    "bintray",
     "maven central"
   ],
   "dependencies": {
