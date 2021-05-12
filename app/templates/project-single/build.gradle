@@ -2,13 +2,13 @@ plugins {
     id 'groovy'
     id 'jacoco'
     id 'project-report'
+    id 'signing'
     id 'ru.vyarus.java-lib' version '2.1.0'
     id 'ru.vyarus.github-info' version '1.2.0'<% if (enableQualityChecks) { %><% if (animalsnifferSignature) { %>
     id 'ru.vyarus.animalsniffer' version '1.5.0'<% } %>
-    id 'ru.vyarus.quality' version '4.0.0'<% } %>
-    id 'com.jfrog.bintray' version '1.8.4'
+    id 'ru.vyarus.quality' version '4.6.0'<% } %>
     id 'net.researchgate.release' version '2.8.1'
-    id 'com.github.ben-manes.versions' version '0.27.0'
+    id 'com.github.ben-manes.versions' version '0.38.0'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 }
 
@@ -23,7 +23,7 @@ ext {
     slf4j = '1.7.28'
 }
 
-repositories { jcenter(); mavenCentral(); mavenLocal() }
+repositories { mavenCentral(); mavenLocal() }
 dependencyManagement {
     // Use for BOM declaration
 //    imports {
@@ -81,34 +81,32 @@ jar {
     }
 }
 
-bintray {
-    user = findProperty('bintrayUser')
-    key = findProperty('bintrayKey')
-    publications = ['maven']
-    dryRun = false
-    publish = true
-    pkg {
-        repo = '<%= bintrayRepo %>'
-        name = project.name
-        desc = project.description
-        labels = [<%- libTags %>]
-        publicDownloadNumbers = true
-        version {
-            gpg {
-                sign = <%= bintraySignFiles %>
-                passphrase = findProperty('gpgPassphrase')
-            }
-            mavenCentralSync {
-                sync = <%= mavenCentralSync %>
-                user = findProperty('sonatypeUser')
-                password = findProperty('sonatypePassword')
-            }
+nexusPublishing {
+    repositories {
+        sonatype {
+            username = findProperty('sonatypeUser')
+            password = findProperty('sonatypePassword')
         }
     }
 }
 
+signing {
+    // https://docs.gradle.org/current/userguide/signing_plugin.html#sec:signatory_credentials
+    sign publishing.publications.maven
+}
+
+tasks.withType(Sign).configureEach {
+    onlyIf { !version.endsWith("SNAPSHOT") }
+}
+
+// disable gradle metadata publishing (because it confuse a lot)
+tasks.withType(GenerateModuleMetadata).configureEach {
+    enabled = false
+}
+
 afterReleaseBuild {
-    dependsOn = [bintrayUpload]
+    dependsOn = ['publishToSonatype',
+                 'closeAndReleaseSonatypeStagingRepository']
     doLast {
         logger.warn "RELEASED $project.group:$project.name:$project.version"
     }

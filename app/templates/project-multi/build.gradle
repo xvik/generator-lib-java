@@ -2,14 +2,14 @@ plugins {
     id 'ru.vyarus.java-lib' version '2.1.0' apply false
     id 'ru.vyarus.github-info' version '1.2.0' apply false<% if (enableQualityChecks) { %><% if (animalsnifferSignature) { %>
     id 'ru.vyarus.animalsniffer' version '1.5.0' apply false<% } %>
-    id 'ru.vyarus.quality' version '4.0.0' apply false<% } %>
-    id 'com.jfrog.bintray' version '1.8.4' apply false
-    id "io.spring.dependency-management" version "1.0.9.RELEASE" apply false
+    id 'ru.vyarus.quality' version '4.6.0' apply false<% } %>
+    id "io.spring.dependency-management" version '1.0.9.RELEASE' apply false
 
     id 'base'
     id 'jacoco'
     id 'net.researchgate.release' version '2.8.1'
-    id 'com.github.ben-manes.versions' version '0.27.0'
+    id 'com.github.ben-manes.versions' version '0.38.0'
+    id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
 }
 
 wrapper {
@@ -20,26 +20,14 @@ description = '<%= libDesc %>'
 
 allprojects {
     apply plugin: 'project-report'
-    apply plugin: 'com.jfrog.bintray'
 
-    repositories { jcenter(); mavenCentral(); mavenLocal() }
-
-    bintray {
-        user = findProperty('bintrayUser')
-        key = findProperty('bintrayKey')
-        pkg {
-            repo = 'xvik'
-            name = rootProject.name
-            desc = rootProject.description
-            labels = [<%- libTags %>]
-            publicDownloadNumbers = true
-        }
-    }
+    repositories { mavenCentral(); mavenLocal() }
 }
 
 subprojects {
     apply plugin: 'groovy'
     apply plugin: 'jacoco'
+    apply plugin: 'signing'
     apply plugin: 'ru.vyarus.java-lib'<% if (animalsnifferSignature) { %>
     apply plugin: 'ru.vyarus.animalsniffer'<% } %>
     apply plugin: 'ru.vyarus.quality'
@@ -117,8 +105,18 @@ subprojects {
         }
     }
 
-    bintray {
-        publications = ['maven']
+    signing {
+        // https://docs.gradle.org/current/userguide/signing_plugin.html#sec:signatory_credentials
+        sign publishing.publications.maven
+    }
+
+    tasks.withType(Sign).configureEach {
+        onlyIf { !version.endsWith("SNAPSHOT") }
+    }
+
+    // disable gradle metadata publishing (because it confuse a lot)
+    tasks.withType(GenerateModuleMetadata).configureEach {
+        enabled = false
     }
 
     test {
@@ -141,37 +139,22 @@ subprojects {
     }
 }
 
-/*
- Each module published separately: subprojects simply upload files to bintray and root project will
- publish/generate signatures/sync with maven central.
- Note: plugin will find bintray tasks in submodules and depend on it so order will be always correct.
- */
-bintray {
-    publish = true
-    pkg {
-        version {
-            gpg {
-                sign = <%= bintraySignFiles %>
-                passphrase = findProperty('gpgPassphrase')
-            }
-            mavenCentralSync {
-                sync = <%= mavenCentralSync %>
-                user = findProperty('sonatypeUser')
-                password = findProperty('sonatypePassword')
-            }
+// dependency on all subprojects required for release validation
+check.dependsOn subprojects.check
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            username = findProperty('sonatypeUser')
+            password = findProperty('sonatypePassword')
         }
     }
 }
 
-// by default, task depends on subproject tasks directly, which breaks dependencies graph
-bintrayUpload.dependsOn subprojects.collect { ":$it.name:bintrayUpload" }
-
-// dependency on all subprojects required for release validation
-check.dependsOn subprojects.check
-
 // release manages only root project (subprojects will be checked and released implicitly)
 afterReleaseBuild {
-    dependsOn = ['bintrayUpload']
+    dependsOn = ['publishToSonatype',
+                 'closeAndReleaseSonatypeStagingRepository']
     doLast {
         logger.warn "RELEASED $project.group:$project.name:$project.version"
     }

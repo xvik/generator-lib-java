@@ -1,5 +1,13 @@
 * Minimal required node 12.10.0
 * Update to gradle 6.9
+* Update ru.vyarus.quality 4.0.0 -> 4.6.0
+* Update com.github.ben-manes.versions 0.27.0 -> 0.38.0
+* (breaking) Removed jcenter publishing, instead publish to maven central directly
+  - Remove com.jfrog.bintray plugin
+  - Add io.github.gradle-nexus.publish-plugin (1.1.0)
+  - Add signing plugin (signing now manual; certificate configuration required)
+* Remove jcenter badge and repo usages
+* Disable gradle metadata publishing
 
 ### 2.8.0 (2020-01-26)
 * Update ru.vyarus.java-lib 1.1.2 -> 2.1.0

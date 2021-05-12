@@ -9,11 +9,7 @@
 <%= libDesc %>
 
 ### Setup
- 
-Releases are published to [bintray jcenter](https://bintray.com/<%= bintrayUser %>/<%= bintrayRepo %>/<%= libName %>/) and 
-[maven central](https://maven-badges.herokuapp.com/maven-central/<%= libGroup %>/<%= libName %>) 
 
-[![JCenter](https://img.shields.io/bintray/v/<%= bintrayUser %>/<%= bintrayRepo %>/<%= libName %>.svg?label=jcenter)](https://bintray.com/<%= bintrayUser %>/<%= bintrayRepo %>/<%= libName %>/_latestVersion)
 [![Maven Central](https://img.shields.io/maven-central/v/<%= libGroup %>/<%= libName %>.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/<%= libGroup %>/<%= libName %>)
 
 You can either use [modules](#modules) directly (in this case see module page for setup) or use provided [BOM](<%= modulePrefix %>-bom)

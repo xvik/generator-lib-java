@@ -7,7 +7,6 @@ Provides:
 
 ### Setup
 
-[![JCenter](https://img.shields.io/bintray/v/<%= bintrayUser %>/<%= bintrayRepo %>/<%= libName %>.svg?label=jcenter)](https://bintray.com/<%= bintrayUser %>/<%= bintrayRepo %>/<%= libName %>/_latestVersion)
 [![Maven Central](https://img.shields.io/maven-central/v/<%= libGroup %>/<%= modulePrefix %>-bom.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/<%= libGroup %>/<%= modulePrefix %>-bom)
 
 
