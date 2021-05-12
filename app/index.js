@@ -88,6 +88,17 @@ module.exports = class extends JavaGenerator {
                     'If you need to re-run questions use --ask generator option.');
             }
             this.log();
+
+            // MIGRATION from 2.8.0 or before
+
+            // clear removed properties
+            ['targetJava',
+                'libTags',
+                'mirrorToJcenter',
+                'bintrayUser',
+                'bintrayRepo',
+                'bintraySignFiles',
+                'mavenCentralSync'].forEach(value => this.config.delete(value))
         }
 
         // ask for github
