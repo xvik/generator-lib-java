@@ -2,7 +2,7 @@ plugins {
     id 'ru.vyarus.java-lib' version '2.1.0' apply false
     id 'ru.vyarus.github-info' version '1.2.0' apply false<% if (enableQualityChecks) { %>
     id 'ru.vyarus.quality' version '4.6.0' apply false<% } %>
-    id "io.spring.dependency-management" version '1.0.9.RELEASE' apply false
+    id "io.spring.dependency-management" version '1.0.11.RELEASE' apply false
 
     id 'base'
     id 'jacoco'
@@ -36,8 +36,8 @@ subprojects {
     sourceCompatibility = 1.8
 
     ext {
-        groovy = '2.5.7'
-        slf4j = '1.7.28'
+        groovy = '2.5.14'
+        slf4j = '1.7.30'
     }
 
     dependencyManagement {
@@ -64,7 +64,7 @@ subprojects {
     }
     // common dependencies for all modules
     dependencies {
-        compileOnly 'com.github.spotbugs:spotbugs-annotations:3.1.2'
+        compileOnly 'com.github.spotbugs:spotbugs-annotations:4.2.3'
 
         implementation 'org.slf4j:slf4j-api'
 

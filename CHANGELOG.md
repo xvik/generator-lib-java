@@ -2,6 +2,7 @@
 * Update to gradle 6.9
 * Update ru.vyarus.quality 4.0.0 -> 4.6.0
 * Update com.github.ben-manes.versions 0.27.0 -> 0.38.0
+* Update io.spring.dependency-management 1.0.9 -> 1.0.11
 * (breaking) Removed jcenter publishing, instead publish to maven central directly
   - Remove com.jfrog.bintray plugin
   - Add io.github.gradle-nexus.publish-plugin (1.1.0)
