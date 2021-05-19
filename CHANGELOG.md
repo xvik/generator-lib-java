@@ -12,6 +12,8 @@
 * Remove java version selection: java8 used by default for compilation
   - Remove animalsniffer usage 
 * Enable mavenLocal as plugin repository by default (in settings.gradle)  
+* Use spock 2.0 (groovy 3)
+* Remove spring dependency-management plugin in favour of gradle platform
 
 ### 2.8.0 (2020-01-26)
 * Update ru.vyarus.java-lib 1.1.2 -> 2.1.0

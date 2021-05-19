@@ -9,7 +9,6 @@ plugins {
     id 'net.researchgate.release' version '2.8.1'
     id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
     id 'com.github.ben-manes.versions' version '0.38.0'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
 sourceCompatibility = 1.8
@@ -24,34 +23,17 @@ ext {
 }
 
 repositories { mavenCentral(); mavenLocal() }
-dependencyManagement {
-    // Use for BOM declaration
-//    imports {
-//        mavenBom "group:artifact:version"
-//    }
-    dependencies {
-        dependency 'org.spockframework:spock-core:1.3-groovy-2.5'
-        // groovy bundled with spock (2.5.2) does not work well with java 11
-        dependency "org.codehaus.groovy:groovy:$groovy"
-        dependency "org.codehaus.groovy:groovy-json:$groovy"
-        dependency "org.codehaus.groovy:groovy-macro:$groovy"
-        dependency "org.codehaus.groovy:groovy-nio:$groovy"
-        dependency "org.codehaus.groovy:groovy-sql:$groovy"
-        dependency "org.codehaus.groovy:groovy-templates:$groovy"
-        dependency "org.codehaus.groovy:groovy-test:$groovy"
-        dependency "org.codehaus.groovy:groovy-xml:$groovy"
-
-        dependency "org.slf4j:slf4j-api:$slf4j"
-    }
-}
 dependencies {
+    // BOMs usage
+    // implementation platform('dependency:address')
+
     compileOnly 'com.github.spotbugs:spotbugs-annotations:4.2.3'
 
-    implementation 'org.slf4j:slf4j-api'
+    implementation "org.slf4j:slf4j-api:$slf4j"
 
     testImplementation 'ch.qos.logback:logback-classic:1.2.3'
     testImplementation "org.slf4j:jul-to-slf4j:$slf4j"
-    testImplementation 'org.spockframework:spock-core'
+    testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
 }
 
 group = '<%= libGroup %>'
@@ -111,6 +93,7 @@ afterReleaseBuild {
 }
 
 test {
+    useJUnitPlatform()
     testLogging {
         events 'skipped', 'failed'
         exceptionFormat 'full'
