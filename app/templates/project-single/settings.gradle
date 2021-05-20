@@ -17,4 +17,3 @@ gradleEnterprise {
 }
 
 rootProject.name = '<%= libName %>'
-
