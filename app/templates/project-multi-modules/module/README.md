@@ -10,7 +10,7 @@ Features:
 
 [![Maven Central](https://img.shields.io/maven-central/v/<%= libGroup %>/<%= modulePrefix %>-<%= moduleName %>.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/<%= libGroup %>/<%= modulePrefix %>-<%= moduleName %>)
 
-Avoid version in dependency declaration below if you use [extensions BOM](../<%= modulePrefix %>-bom). 
+Avoid version in dependency declaration below if you use [BOM](../). 
 
 Maven:
 

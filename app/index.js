@@ -265,10 +265,6 @@ module.exports = class extends JavaGenerator {
             this.$copyTpl('project-multi', {writeOnceFiles: writeOnceFiles});
             // generate modules only once because module would be obviously renamed after initial generation
             if (!this.context.updateMode) {
-                this.$copyTpl('project-multi-modules/bom', {
-                    writeOnceFiles: writeOnceFiles,
-                    targetFolder: this.modulePrefix + '-bom'
-                });
                 const moduleDir = this.modulePrefix + '-' + this.moduleName;
                 this.$copyTpl('project-multi-modules/module', {
                     writeOnceFiles: writeOnceFiles,

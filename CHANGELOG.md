@@ -14,6 +14,9 @@
 * Enable mavenLocal as plugin repository by default (in settings.gradle)  
 * Use spock 2.0 (groovy 3)
 * Remove spring dependency-management plugin in favour of gradle platform
+  - In multi-module project bom module removed: instead platform
+    is declared in the ROOT project, like maven (BOM published on release as before)
+    Subprojects did not depend on BOM anymore (gradle platform eliminated in the generated pom)
 * settings.gradle is modified now on project update
 
 ### 2.8.0 (2020-01-26)

@@ -2,10 +2,11 @@ plugins {
     id 'ru.vyarus.java-lib' version '2.1.0' apply false
     id 'ru.vyarus.github-info' version '1.2.0' apply false<% if (enableQualityChecks) { %>
     id 'ru.vyarus.quality' version '4.6.0' apply false<% } %>
-    id "io.spring.dependency-management" version '1.0.11.RELEASE' apply false
 
     id 'base'
     id 'jacoco'
+    id 'java-platform'
+    id 'ru.vyarus.pom' version '2.2.0-SNAPSHOT'
     id 'net.researchgate.release' version '2.8.1'
     id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
     id 'com.github.ben-manes.versions' version '0.38.0'
@@ -17,51 +18,48 @@ wrapper {
 
 description = '<%= libDesc %>'
 
-allprojects {
-    apply plugin: 'project-report'
-
-    repositories { mavenCentral(); mavenLocal() }
+javaPlatform {
+    allowDependencies()
 }
 
-subprojects {
-    apply plugin: 'groovy'
-    apply plugin: 'jacoco'
-    apply plugin: 'signing'
-    apply plugin: 'ru.vyarus.java-lib'
-    apply plugin: 'ru.vyarus.quality'
-    apply plugin: 'ru.vyarus.github-info'
-    apply plugin: 'com.github.ben-manes.versions'
-    apply plugin: 'io.spring.dependency-management'
+ext {
+    slf4j = '1.7.30'
+}
 
-    sourceCompatibility = 1.8
-
-    ext {
-        slf4j = '1.7.30'
-    }
-
-    dependencyManagement {
-        // Use for BOM declaration
-//      imports {
-//          mavenBom "group:artifact:version"
-//      }
-        dependencies {
-            dependency 'org.spockframework:spock-core:2.0-groovy-3.0'
-
-            dependency "org.slf4j:slf4j-api:$slf4j"
-
-            // put all modules dependencies here in order to use BOM for version management
+// root project is a BOM (like maven)
+dependencies {
+    // inherited BOMs declaration
+    //api platform('group:artifact:version')
+    constraints {
+        api 'org.spockframework:spock-core:2.0-groovy-3.0'
+        api "org.slf4j:slf4j-api:$slf4j"
+        // add subprojects to BOM
+        project.subprojects.each {
+            api it
         }
     }
-    // common dependencies for all modules
-    dependencies {
-        compileOnly 'com.github.spotbugs:spotbugs-annotations:4.2.3'
+}
 
-        implementation 'org.slf4j:slf4j-api'
-
-        testImplementation 'ch.qos.logback:logback-classic:1.2.3'
-        testImplementation "org.slf4j:jul-to-slf4j:$slf4j"
-        testImplementation 'org.spockframework:spock-core'
+publishing {
+    publications {
+        bom(MavenPublication) {
+            // custom name required, otherwise it would be project name
+            artifactId = '<%= modulePrefix %>-bom'
+            from components.javaPlatform
+        }
     }
+}
+
+// in subrojects task would be created by java-lib plugin
+task install(dependsOn: 'publishToMavenLocal')
+
+// maven pom related configuration applied to all projects (including BOM)
+allprojects {
+    apply plugin: 'project-report'
+    apply plugin: 'ru.vyarus.github-info'
+    apply plugin: 'signing'
+
+    repositories { mavenCentral(); mavenLocal() }
 
     group = '<%= libGroup %>'
 
@@ -84,16 +82,9 @@ subprojects {
         }
     }
 
-    // java 11 auto module name
-    jar {
-        manifest {
-            attributes 'Automatic-Module-Name': "$rootProject.group.${project.name.replace('<%= modulePrefix %>-', rootProject.name)}"
-        }
-    }
-
     signing {
         // https://docs.gradle.org/current/userguide/signing_plugin.html#sec:signatory_credentials
-        sign publishing.publications.maven
+        sign publishing.publications
     }
 
     tasks.withType(Sign).configureEach {
@@ -103,6 +94,42 @@ subprojects {
     // disable gradle metadata publishing (because it confuse a lot)
     tasks.withType(GenerateModuleMetadata).configureEach {
         enabled = false
+    }
+}
+
+// all sub-modules are normal java modules, using root BOM (like maven)
+subprojects {
+    apply plugin: 'groovy'
+    apply plugin: 'jacoco'
+    apply plugin: 'ru.vyarus.java-lib'
+    apply plugin: 'ru.vyarus.quality'
+    apply plugin: 'com.github.ben-manes.versions'
+
+    sourceCompatibility = 1.8
+
+    // common dependencies for all modules
+    dependencies {
+        implementation platform(project(':'))
+
+        compileOnly 'com.github.spotbugs:spotbugs-annotations:4.2.3'
+
+        implementation 'org.slf4j:slf4j-api'
+
+        testImplementation 'ch.qos.logback:logback-classic:1.2.3'
+        testImplementation "org.slf4j:jul-to-slf4j:${rootProject.slf4j}"
+        testImplementation 'org.spockframework:spock-core'
+    }
+
+    // use only direct dependencies in the generated pom, removing BOM
+    pomGeneration {
+        removeDependencyManagement()
+    }
+
+    // java 11 auto module name
+    jar {
+        manifest {
+            attributes 'Automatic-Module-Name': "$rootProject.group.${project.name.replace('<%= modulePrefix %>-', rootProject.name)}"
+        }
     }
 
     test {
@@ -153,7 +180,7 @@ task testReport(type: TestReport, description: 'Generates an aggregate test repo
 }
 
 task jacocoMerge(type: JacocoMerge, description: 'Merge coverage results for aggregated report generation') {
-    executionData = files(subprojects.collect {it.file('build/jacoco/test.exec')})
+    executionData = files(subprojects.collect { it.file('build/jacoco/test.exec') })
     doFirst {
         executionData = files(executionData.findAll { it.exists() })
     }

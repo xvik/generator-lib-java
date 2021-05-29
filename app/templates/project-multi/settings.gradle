@@ -18,5 +18,4 @@ gradleEnterprise {
 
 rootProject.name = '<%= libName %>'
 
-include '<%= modulePrefix %>-bom',
-        '<%= modulePrefix %>-<%= moduleName %>'
+include '<%= modulePrefix %>-<%= moduleName %>'

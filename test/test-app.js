@@ -101,7 +101,6 @@ describe('check multi-module app generation', () => {
         result.assertFile(remapFiles(appPath + '/templates/gradle-base'));
         result.assertFile(remapFiles(appPath + '/templates/project-base').map(dotfile));
         result.assertFile(remapFiles(appPath + '/templates/project-multi').map(dotfile));
-        result.assertFile(read(appPath + '/templates/project-multi-modules/bom').map(subdir('testlib/foo-bom')));
         result.assertFile(read(appPath + '/templates/project-multi-modules/module').map(subdir('testlib/foo-sample')));
         result.assertFile(read(appPath + '/templates/sources').map(dotfile).map(repackage).map(subdir('testlib/foo-sample')));
     });
