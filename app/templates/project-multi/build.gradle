@@ -40,6 +40,11 @@ dependencies {
     }
 }
 
+pom {
+    name '<%= modulePrefix %>-bom'
+    description '<%= libDesc %> BOM'
+}
+
 publishing {
     publications {
         bom(MavenPublication) {
