@@ -22,7 +22,7 @@ ext {
     slf4j = '1.7.30'
 }
 
-repositories { mavenCentral(); mavenLocal() }
+repositories { mavenLocal(); mavenCentral() }
 dependencies {
     // BOMs usage
     // implementation platform('dependency:address')

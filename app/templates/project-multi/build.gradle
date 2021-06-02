@@ -64,7 +64,7 @@ allprojects {
     apply plugin: 'ru.vyarus.github-info'
     apply plugin: 'signing'
 
-    repositories { mavenCentral(); mavenLocal() }
+    repositories { mavenLocal(); mavenCentral() }
 
     group = '<%= libGroup %>'
 
