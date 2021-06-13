@@ -2,7 +2,7 @@
 * Update to gradle 6.9
 * Update ru.vyarus.quality 4.0.0 -> 4.6.0
 * Update com.github.ben-manes.versions 0.27.0 -> 0.39.0
-* Update io.spring.dependency-management 1.0.9 -> 1.0.11
+* Update ru.vyarus.java-lib 2.1.0 -> 2.2.0 (much multi-module logic moved to plugin)
 * (breaking) Removed jcenter publishing, instead publish to maven central directly
   - Remove com.jfrog.bintray plugin
   - Add io.github.gradle-nexus.publish-plugin (1.1.0)
@@ -16,8 +16,9 @@
 * Remove spring dependency-management plugin in favour of gradle platform
   - In multi-module project bom module removed: instead platform
     is declared in the ROOT project, like maven (BOM published on release as before)
-    Subprojects did not depend on BOM anymore (gradle platform eliminated in the generated pom)
+    Generated subproject poms does not depend on BOM anymore (direct dependencies put instead)
 * settings.gradle is modified now on project update
+  Settings now contains plugin repos declaration and buildscan configuration
 
 ### 2.8.0 (2020-01-26)
 * Update ru.vyarus.java-lib 1.1.2 -> 2.1.0

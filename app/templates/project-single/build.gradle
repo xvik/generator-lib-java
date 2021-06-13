@@ -3,7 +3,7 @@ plugins {
     id 'jacoco'
     id 'project-report'
     id 'signing'
-    id 'ru.vyarus.java-lib' version '2.1.0'
+    id 'ru.vyarus.java-lib' version '2.2.0-SNAPSHOT'
     id 'ru.vyarus.github-info' version '1.2.0'<% if (enableQualityChecks) { %>
     id 'ru.vyarus.quality' version '4.6.0'<% } %>
     id 'net.researchgate.release' version '2.8.1'
@@ -54,11 +54,16 @@ pom {
     }
 }
 
-// java 11 auto module name
-jar {
-    manifest {
-        attributes 'Automatic-Module-Name': "$project.group.$project.name"
-    }
+javaLib {
+    // java 11 auto module name
+    autoModuleName = "$project.group.$project.name"
+    // don't publish gradle metadata artifact
+    disableGradleMetadata()
+    // use only direct dependencies in the generated pom, removing BOM mentions
+    pom.removeDependencyManagement()
+    // artifacts signed only on release
+    // https://docs.gradle.org/current/userguide/signing_plugin.html#sec:signatory_credentials
+    // enableSnapshotsSigning()
 }
 
 nexusPublishing {
@@ -68,20 +73,6 @@ nexusPublishing {
             password = findProperty('sonatypePassword')
         }
     }
-}
-
-signing {
-    // https://docs.gradle.org/current/userguide/signing_plugin.html#sec:signatory_credentials
-    sign publishing.publications.maven
-}
-
-tasks.withType(Sign).configureEach {
-    onlyIf { !version.endsWith("SNAPSHOT") }
-}
-
-// disable gradle metadata publishing (because it confuse a lot)
-tasks.withType(GenerateModuleMetadata).configureEach {
-    enabled = false
 }
 
 afterReleaseBuild {
@@ -102,12 +93,3 @@ test {
 }
 
 dependencyUpdates.revision = 'release'
-jacocoTestReport.reports.xml.enabled = true
-
-
-task showDependenciesTree(dependsOn: 'htmlDependencyReport', group: 'help', description:
-        'Generates dependencies tree report and opens it in browser') {
-    doLast {
-        java.awt.Desktop.getDesktop().open(file('build/reports/project/dependencies/root.html'))
-    }
-}
