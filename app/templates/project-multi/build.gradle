@@ -72,7 +72,7 @@ allprojects {
         license = 'MIT'
         licenseUrl = github.rawFileUrl('LICENSE');
         changelogFile = 'CHANGELOG.md'
-        vcsUrl = 'https://github.com/xvik/<%= libName %>'
+        vcsUrl = 'https://github.com/<%= githubUser %>/<%= libName %>'
     }
 
     pom {
