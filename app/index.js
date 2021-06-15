@@ -239,6 +239,11 @@ module.exports = class extends JavaGenerator {
     }
 
     configuring() {
+        // fill not used properties for single-module projects (to avoid questions on update)
+        if (!this.multiModule) {
+            this.modulePrefix = '-';
+            this.moduleName = '-';
+        }
 
         // configure
         this.$selectTargetFolder();
