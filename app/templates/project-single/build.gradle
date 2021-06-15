@@ -61,9 +61,6 @@ javaLib {
     disableGradleMetadata()
     // use only direct dependencies in the generated pom, removing BOM mentions
     pom.removeDependencyManagement()
-    // artifacts signed only on release
-    // https://docs.gradle.org/current/userguide/signing_plugin.html#sec:signatory_credentials
-    // enableSnapshotsSigning()
 }
 
 nexusPublishing {
@@ -74,6 +71,9 @@ nexusPublishing {
         }
     }
 }
+
+// Required signing properties for release: signing.keyId, signing.password and signing.secretKeyRingFile
+// (https://docs.gradle.org/current/userguide/signing_plugin.html#sec:signatory_credentials)
 
 afterReleaseBuild {
     dependsOn = ['publishToSonatype',
