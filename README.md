@@ -3,7 +3,8 @@
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/xvik/generator-lib-java)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://www.opensource.org/licenses/MIT)
 [![NPM version](https://img.shields.io/npm/v/generator-lib-java.svg)](http://badge.fury.io/js/generator-lib-java)
-[![Build Status](https://secure.travis-ci.org/xvik/generator-lib-java.png)](https://travis-ci.org/xvik/generator-lib-java)
+[![Build Status](https://travis-ci.com/xvik/generator-lib-java.svg?branch=master)](https://travis-ci.com/xvik/generator-lib-java)
+
 
 ### About
 
