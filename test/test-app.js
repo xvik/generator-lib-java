@@ -31,7 +31,7 @@ function subdir(dir) {
 
 async function runGradle(targetDir, done) {
     const isWin = /^win/.test(process.platform),
-        targetFile = 'gradlew' + (isWin ? '.bat' : '');
+        targetFile = (isWin ? '': (targetDir + '/')) + 'gradlew' + (isWin ? '.bat' : '');
     const { stdout, stderr } = await execFile(targetFile, ['check'], {cwd: targetDir});
     console.log(stdout);
     console.log(stderr);
