@@ -8,7 +8,8 @@
 
 ### About
 
-The main goal is to simplify new [github](https://github.com) java library setup.
+Generates java library project (or multi-module library), hosted on github with maven central publication.
+Ideal for new OSS project quick start.
 
 Features:
 * Single and multi-module projects generation
@@ -16,8 +17,7 @@ Features:
 * [Gradle](http://www.gradle.org/) build (with support of optional and provided dependencies)
 * [Maven central](http://search.maven.org/) compatible artifacts (jar, sources, javadocs)
 * Ready for [spock](http://spockframework.org) tests ([documentation](http://docs.spockframework.org))
-* [Bintray](https://bintray.com/) publication (+ jars signing and maven central publishing)
-* CI: [travis](https://travis-ci.org/) (linux), [appveyor](https://www.appveyor.com/) (windows)
+* CI: [travis](https://travis-ci.com/) (linux), [appveyor](https://www.appveyor.com/) (windows)
 * Coverage with jacoco, merged from both win and linux builds in [codecov.io](https://codecov.io/)
 * Target jdk compatibility check with [animal sniffer](http://mojo.codehaus.org/animal-sniffer/) (you may use newer jdk to build, and keep compatibility with older jdk)
 * Code quality checks ([checkstyle](http://checkstyle.sourceforge.net/), [pmd](http://pmd.sourceforge.net/), [findbugs](http://findbugs.sourceforge.net/))
@@ -64,36 +64,76 @@ $ npm install -g generator-lib-java
 
 You will need [github](https://github.com) user. Create it if you don't have already.
 
-### Bintray setup
+### Maven central setup
 
-Bintray automates files signing and maven central publishing.
-Project already generates valid artifacts for maven central, you just need to configure bintray.
+For maven central publication you must first register in sonatype and approve your group.
+Read this a bit [outdated article](https://medium.com/@vyarus/the-hard-way-to-maven-central-c9e16d163acc)
+for getting started.
 
-Sign up [bintray](https://bintray.com/) and create maven repository to upload artifacts to (it's name is one of generator questions).
+For certificate generation see [java-lib plugin docs](https://github.com/xvik/gradle-java-lib-plugin#signing)
+Note that signing configuration required only for release (otherwise its ignored)
 
-[Follow instruction](https://medium.com/@vyarus/the-hard-way-to-maven-central-c9e16d163acc)
-
-Add bintray user and key to `~/.gradle/gradle.properties`
-
-```
-bintrayUser=username
-bintrayKey=secretkey
-```
-
-If you will use automatic signing and certificate requires passphrase:
+After all you'll need to put the following properties into `~/.gradle/gradle.properties`
 
 ```
-gpgPassphrase=passphrase
-```
+sonatypeUser =
+sonatypePassword =
 
-If you will use automatic maven central publishing add:
-
-```
-sonatypeUser=username
-sonatypePassword=password
+signing.keyId = 78065050
+signing.password =
+signing.secretKeyRingFile = /path/to/certs.gpg
 ```
 
 Generator will check and warn you if something is not configured.
+
+### Publishing library to local repository only
+
+If library is assumed to be used as internal library with local (corporate) maven repo,
+manual modifications required.
+
+Remove `io.github.gradle-nexus.publish-plugin`.
+
+Remove `ru.vyarus.github-info` (I assume your source would not be in github). And remove related
+`github` configuration block.
+
+Remove `signing` plugin if you don't need to sign artifacts for your repository.
+
+Configure repository:
+
+```groovy
+publishing {
+    repositories {
+        maven {
+            url project.version.contains("SNAPSHOT")
+                    ? "https://my-private-nexus.com/nexus/content/repositories/my-snapshots"
+                    : "https://my-private-nexus.com/nexus/content/repositories/my-releases"
+            credentials {
+                username = project.findProperty('myRepoUser')
+                password = project.findProperty('myRepoPass')
+            }
+        }
+    }
+}
+```
+
+Change releasing task:
+
+```groovy
+afterReleaseBuild {
+    dependsOn = [publish]
+```
+
+Now simple `publish` task deploys snapshot version and `release` task would perform complete release
+(with version change and tagging git).
+
+To use published library declare custom repository in target project:
+
+```groovy
+repositories {
+    // usually root repo combining releases and snapshots
+    maven { url 'https://my-private-nexus.com/nexus/content/groups/my/' }
+}
+```
 
 ### Usage
 
@@ -113,10 +153,6 @@ Generator calls github to validate user correctness and suggest your name and em
 ```bash
 $ yo lib-java --offline
 ```
-
-NOTE: even if you chose syncing with maven central, build.gradle will contain false on initial generation, because
-it's impossible to use it on first release (package needs to be added to jcenter). See release section for more details.
-Anyway, your answer will be stored and on update (next generation) correct value will be set to config.
 
 Project setup ready, start coding!
 
@@ -145,26 +181,19 @@ Create [github](https://github.com) repo matching your library name and push pro
 In github project settings go to `Webhooks & services` and add `travis-ci` service.
 
 Enable repository on services:
-* [travis](https://travis-ci.org/)
+* [travis](https://travis-ci.com/)
 * [appveyor](https://www.appveyor.com/) 
 
 And after next commit windows and linux builds will be performed automatically and combined coverage report
 will be available on [codecov](https://codecov.io/) (badges for all services are already generated in readme). 
 
-Bintray and maven central badges are generated in readme, but commented (uncomment before release).
+Maven central badge is generated in readme.
 
 ### Snapshots
 
 [JitPack](https://jitpack.io) is ideal for snapshots: it builds github project and serves dependency for you.
 Special section in project readme is generated to show how to use it for snapshots.
 JitPack doesn't require any configuration to support your library.
-
-Bintray is still used for releases, because:
-* Maven central require jar signing, which grants secure usage of your artifact (and prevents artifact changes, 
-for example, malicious injections)
-* Bintray jcenter now become standard for java projects (second to maven central). It is trusted and, for example, in gradle enabled by default 
-(no need to specify custom repository).
-* It's not used frequently, but bintray supports user notifications about new versions.
 
 ### Gitter
 
@@ -201,7 +230,7 @@ $ gradlew dependencies
 Prints dependencies tree into console
 
 ```bash
-$ gradlew showDependenciesTree
+$ gradlew openDependencyReport
 ```
 
 Generates dependencies html report and launch it in default browser.
@@ -222,8 +251,6 @@ Releases library. Read release process section below before performing first rel
 
 ### Project details
 
-[Sample build file](https://github.com/xvik/generator-lib-java/wiki/Build-file-annotated) with comments.
-
 Used gradle plugins:
 * [java](http://www.gradle.org/docs/current/userguide/java_plugin.html)
 * [groovy](http://www.gradle.org/docs/current/userguide/groovy_plugin.html) to support spock tests
@@ -232,16 +259,14 @@ Used gradle plugins:
 * [jacoco](http://www.gradle.org/docs/current/userguide/jacoco_plugin.html) to build coverage report for coveralls
 * [pmd](http://www.gradle.org/docs/current/userguide/pmd_plugin.html) to check code quality with [PMD](http://pmd.sourceforge.net/) tool
 * [checkstyle](http://www.gradle.org/docs/current/userguide/checkstyle_plugin.html) to check code style rules with [checkstyle](http://checkstyle.sourceforge.net/index.html)
-* [findbugs](http://www.gradle.org/docs/current/userguide/findbugs_plugin.html) to find potential bugs with [findbugs](http://findbugs.sourceforge.net/)
-* [com.jfrog.bintray](https://github.com/bintray/gradle-bintray-plugin) for bintray publishing
+* [spotbugs](https://github.com/spotbugs/spotbugs-gradle-plugin) to find potential bugs with [spotbugs](https://spotbugs.github.io/)
+* [o.github.gradle-nexus.publish-plugin](https://github.com/gradle-nexus/publish-plugin) to simplify maven central publication
 * [com.github.ben-manes.versions](https://github.com/ben-manes/gradle-versions-plugin) to check dependencies versions updates
 * [net.researchgate.release](https://github.com/researchgate/gradle-release) for release (see [article](http://www.sosaywecode.com/gradle-release-plugin/) for additional plugin details)
 * [ru.vyarus.pom](https://github.com/xvik/gradle-pom-plugin) for simpler pom generation
 * [ru.vyarus.java-lib](https://github.com/xvik/gradle-java-lib-plugin) to prepare java artifacts setup
 * [ru.vyarus.github-info](https://github.com/xvik/gradle-github-info-plugin) to fill in github specific data
 * [ru.vyarus.quality](https://github.com/xvik/gradle-quality-plugin) to configure quality plugins and provide advanced reporting
-* [ru.vyarus.animalsniffer](https://github.com/xvik/gradle-animalsniffer-plugin) to verify jdk backwards compatibility when building on newer jdk
-* [io.spring.dependency-management](https://github.com/xvik/gradle-animalsniffer-plugin) to use maven BOMs (plugin used instead of gradle native BOM's support as more correct)
 
 #### Optional dependencies
 
@@ -259,7 +284,7 @@ or
 optional 'com.github.spotbugs:spotbugs-annotations:3.1.2'
 ```
 
-In generated pom these dependencies will be defined as provided or optional, but for gradle build it's
+In the generated pom these dependencies will be defined as provided or optional, but for gradle build it's
 the same as declaring them in `implementation` scope.
 
 jsr305 provided dependency is defined by default in generated project (useful to guide firebug). 
@@ -267,21 +292,6 @@ jsr305 provided dependency is defined by default in generated project (useful to
 Scala note: The Scala compiler, unlike the Java compiler, [requires that annotations used by a library be available when
 compiling against that library](https://issues.scala-lang.org/browse/SI-5420).
 If your library users will compile with Scala, they must declare a dependency on JSR-305 jar.
-
-#### Java compatibility
-
-It still makes sense to keep library compatibility with older java version (6 or 7), even when newer java used for development.
-
-But when project compiled with newer jdk, there is a chance to use newer api, not available in target (older) jdk. 
-[ru.vyarus.animalsniffer plugin](https://github.com/xvik/gradle-animalsniffer-plugin) checks jdk api usage. 
- 
-There is special dependency configuration `signature` which defines target signature to check, e.g.:
-
-```groovy
-signature 'org.codehaus.mojo.signature:java16-sun:+@signature'
-```
- 
-When no signatures defined, no check will be performed.
 
 ### Quality tools
 
@@ -312,20 +322,6 @@ $ gradlew install
 
 And validate generated pom file and jars (in local maven repository ~/.m2/repository/..).
 
-NOTE: Release plugin requires access to git repository without credentials, so it's
-better to allow storing credentials when using git console.
-Windows users with sysgit 1.8.1 and up could use:
-
-```bash
-$ git config --global credential.helper wincred
-```
-
-To [avoid problems](https://github.com/townsfolk/gradle-release/issues/81).
-
-Bintray and maven central badges are commented in readme - uncomment them (remove maven badge if not going to publish there)
-
-Automatic maven central publication is impossible on first release, because package is not yet in jcentral (we will enable it after).
-
 #### General release process
 
 Update `CHANGELOG.md`.
@@ -345,54 +341,6 @@ During release, plugin will create tag (new github release appear) and update ve
 
 You may want to create github release: release will only create tag. To create release go to github releases, click on tag and press 'edit'.
 I usually use text from changelog as release message, but you may expand it with other release specific notes.
-
-#### After first release
-
-Github repository name and changelog file will be [automatically configured](https://github.com/xvik/gradle-github-info-plugin#comjfrogbintray) 
-for bintray plugin. If you renamed changelog file from CHANGELOG.md then you will have to [specify it's name](https://github.com/xvik/gradle-github-info-plugin#available-properties)
-(or configure it manually on bintray package edit page).
-Go to your bintray package page, click on 'readme' tab and select 'github page'.
-Do the same on 'release notes' tab (to show CHANGELOG.md file).
-
-After actual release press 'add to jcenter' button to request jcenter linking (required for maven central publication
-and even if you don't want to sync to maven central, linking to jcenter will simplify library usage for end users).
-
-After acceptance in jcenter (approve takes less than 1 day) do manual maven central synchronization in bintray ui.
-
-Now automatic maven central publication could be enabled in project config `build.gradle`:
-
-```
-bintray {
-        ...
-        mavenCentralSync {
-            sync = true
-```
-
-Note that maven publication requires files signing option active too (if you not choose it during project generation):
-
-```
-        gpg {
-            sign = true
-```
-
-All future releases will publish to maven central automatically.
-
-#### If release failed
-
-Nothing bad could happen.
-
-If bintray upload failed, you can always upload one more time.
-If you uploaded bad version and want to re-release it, simply remove version files on bintray package version page and re-do release.
-
-If release failed, but plugin already commit new version - you can release again from this state (no need to revert).
-
-Release plugin changes only version in `gradle.properties` and creates git tag.
-Version could be reverted manually (by correcting file) and git tag could be also removed like this:
-
-```bash
-git tag -d release01
-git push origin :refs/tags/release01
-```
 
 ### Support
 
