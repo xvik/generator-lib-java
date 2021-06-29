@@ -2,6 +2,7 @@
 * Update to gradle 6.9
 * Update ru.vyarus.quality 4.0.0 -> 4.6.0
 * Update com.github.ben-manes.versions 0.27.0 -> 0.39.0
+* Update ru.vyarus.github-info 1.2.0 -> 1.3.0
 * Update ru.vyarus.java-lib 2.1.0 -> 2.2.0 (much multi-module logic moved to plugin)
 * (breaking) Removed jcenter publishing, instead publish to maven central directly
   - Remove com.jfrog.bintray plugin

@@ -1,5 +1,5 @@
 plugins {
-    id 'ru.vyarus.github-info' version '1.2.0' apply false<% if (enableQualityChecks) { %>
+    id 'ru.vyarus.github-info' version '1.3.0' apply false<% if (enableQualityChecks) { %>
     id 'ru.vyarus.quality' version '4.6.0' apply false<% } %>
 
     id 'jacoco'
@@ -54,11 +54,7 @@ allprojects {
 
     github {
         user = '<%= githubUser %>'
-        repository = rootProject.name
         license = 'MIT'
-        licenseUrl = github.rawFileUrl('LICENSE');
-        changelogFile = 'CHANGELOG.md'
-        vcsUrl = 'https://github.com/<%= githubUser %>/<%= libName %>'
     }
 
     pom {
