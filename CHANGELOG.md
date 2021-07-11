@@ -1,3 +1,4 @@
+### 3.0.0 (2021-07-12)
 * Minimal required node 12.12.0
 * Update to gradle 6.9
 * Update ru.vyarus.quality 4.0.0 -> 4.6.0
