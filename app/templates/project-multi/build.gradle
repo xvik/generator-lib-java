@@ -132,8 +132,8 @@ nexusPublishing {
 
 // release manages only root project (subprojects will be checked and released implicitly)
 afterReleaseBuild {
-    dependsOn = ['publishToSonatype',
-                 'closeAndReleaseSonatypeStagingRepository']
+    dependsOn subprojects.collect {":$it.name:publishToSonatype" }
+    dependsOn 'closeAndReleaseSonatypeStagingRepository'
     doLast {
         logger.warn "RELEASED $project.group:$project.name:$project.version"
     }
