@@ -1,4 +1,6 @@
 * Fix multi-module project release
+* Replace travis with github actions
+* Add dependabot config
 
 ### 3.0.1 (2021-07-13)
 * Update ru.vyarus.java-lib 2.2.0 -> 2.2.1 (fix multi-module projects configuration)
