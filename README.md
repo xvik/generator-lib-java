@@ -17,7 +17,7 @@ Features:
 * [Gradle](http://www.gradle.org/) build (with support of optional and provided dependencies)
 * [Maven central](http://search.maven.org/) compatible artifacts (jar, sources, javadocs)
 * Ready for [spock](http://spockframework.org) tests ([documentation](http://docs.spockframework.org))
-* CI: [travis](https://travis-ci.com/) (linux), [appveyor](https://www.appveyor.com/) (windows)
+* CI: github actions (linux), [appveyor](https://www.appveyor.com/) (windows)
 * Coverage with jacoco, merged from both win and linux builds in [codecov.io](https://codecov.io/)
 * Target jdk compatibility check with [animal sniffer](http://mojo.codehaus.org/animal-sniffer/) (you may use newer jdk to build, and keep compatibility with older jdk)
 * Code quality checks ([checkstyle](http://checkstyle.sourceforge.net/), [pmd](http://pmd.sourceforge.net/), [findbugs](http://findbugs.sourceforge.net/))
@@ -180,9 +180,7 @@ Create [github](https://github.com) repo matching your library name and push pro
 
 In github project settings go to `Webhooks & services` and add `travis-ci` service.
 
-Enable repository on services:
-* [travis](https://travis-ci.com/)
-* [appveyor](https://www.appveyor.com/) 
+Enable repository on [appveyor](https://www.appveyor.com/) 
 
 And after next commit windows and linux builds will be performed automatically and combined coverage report
 will be available on [codecov](https://codecov.io/) (badges for all services are already generated in readme). 
