@@ -1,3 +1,4 @@
+### 3.0.2 (2021-09-06)
 * Fix multi-module project release
 * Replace travis with github actions
 * Add dependabot config

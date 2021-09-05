@@ -1,6 +1,6 @@
 {
   "name": "generator-lib-java",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "type": "commonjs",
   "description": "Java library project generator, hosted on github, build with gradle and published to maven central",
   "license": "MIT",
