@@ -4,7 +4,7 @@ plugins {
 
     id 'jacoco'
     id 'java-platform'
-    id 'ru.vyarus.java-lib' version '2.2.1'
+    id 'ru.vyarus.java-lib' version '2.2.2'
     id 'net.researchgate.release' version '2.8.1'
     id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
     id 'com.github.ben-manes.versions' version '0.39.0'
@@ -46,6 +46,7 @@ javaLib {
 allprojects {
     apply plugin: 'project-report'
     apply plugin: 'ru.vyarus.github-info'
+    apply plugin: 'ru.vyarus.java-lib'
     apply plugin: 'signing'
 
     repositories { mavenLocal(); mavenCentral() }
@@ -57,12 +58,16 @@ allprojects {
         license = 'MIT'
     }
 
-    pom {
-        developers {
-            developer {
-                id '<%= githubUser %>'
-                name '<%= authorName %>'
-                email '<%= authorEmail %>'
+    // delay required because java plugin is activated only in subprojects and without it
+    // pom closure would reference root project only
+    afterEvaluate {
+        pom {
+            developers {
+                developer {
+                    id '<%= githubUser %>'
+                    name '<%= authorName %>'
+                    email '<%= authorEmail %>'
+                }
             }
         }
     }
@@ -77,7 +82,6 @@ allprojects {
 subprojects {
     apply plugin: 'groovy'
     apply plugin: 'jacoco'
-    apply plugin: 'ru.vyarus.java-lib'
     apply plugin: 'ru.vyarus.quality'
     apply plugin: 'com.github.ben-manes.versions'
 
@@ -87,7 +91,7 @@ subprojects {
     dependencies {
         implementation platform(project(':'))
 
-        compileOnly 'com.github.spotbugs:spotbugs-annotations:4.2.3'
+        compileOnly 'com.github.spotbugs:spotbugs-annotations:4.4.2'
 
         implementation 'org.slf4j:slf4j-api'
 
@@ -132,6 +136,7 @@ nexusPublishing {
 
 // release manages only root project (subprojects will be checked and released implicitly)
 afterReleaseBuild {
+    dependsOn 'publishToSonatype'
     dependsOn subprojects.collect {":$it.name:publishToSonatype" }
     dependsOn 'closeAndReleaseSonatypeStagingRepository'
     doLast {
