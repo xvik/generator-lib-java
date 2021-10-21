@@ -40,6 +40,9 @@ javaLib {
         artifactId = '<%= modulePrefix %>-bom'
         description = '<%= libDesc %> BOM'
     }
+    // bom publication could be disabled (to use it only for dependency management in submodules)
+    // in this case bom section above could be removed; afterReleaseBuild must also be updated
+    //withoutPublication()
 }
 
 // maven publication related configuration applied to all projects
