@@ -2,6 +2,7 @@
 * Fix multi-module with bom mavne central publication:
   - pom section from allprojects wasn't applied in subprojects because java plugin is activated only in subprojects
   - bom was not publishing
+* Add jdk 16 to CI builds
 
 ### 3.0.2 (2021-09-06)
 * Fix multi-module project release
