@@ -1,5 +1,6 @@
+### 3.0.3 (2021-10-27)
 * Update ru.vyarus.java-lib 2.2.1 -> 2.2.2 (disable publication option, support submodules without coverage)
-* Fix multi-module with bom mavne central publication:
+* Fix multi-module with bom maven central publication:
   - pom section from allprojects wasn't applied in subprojects because java plugin is activated only in subprojects
   - bom was not publishing
 * Add jdk 16 to CI builds
