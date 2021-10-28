@@ -39,12 +39,18 @@ Issue is not blocking and only affects release process: simply hit enter for que
 
 ### Example projects
 
-* [guice-persist-orient](https://github.com/xvik/guice-persist-orient)
-* [guice-ext-annotations](https://github.com/xvik/guice-ext-annotations)
-* [guice-validator](https://github.com/xvik/guice-validator)
-* [dropwizard-orient-server](https://github.com/xvik/dropwizard-orient-server)
+#### Single module
+
 * [dropwizard-guicey](https://github.com/xvik/dropwizard-guicey)
+* [guice-validator](https://github.com/xvik/guice-validator)
+* [guice-persist-orient](https://github.com/xvik/guice-persist-orient)
+* [dropwizard-orient-server](https://github.com/xvik/dropwizard-orient-server)
 * [generics-resolver](https://github.com/xvik/generics-resolver)
+
+#### Multi-module
+
+* [guice-ext-annotations](https://github.com/xvik/guice-ext-annotations) - with published BOM
+* [yaml-config-updater](https://github.com/xvik/yaml-updater) - without BOM 
 
 ### Setup
 
