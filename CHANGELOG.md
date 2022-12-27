@@ -1,8 +1,12 @@
+### 3.1.0 (2022-12-27)
 * Update ru.vyarus.java-lib 2.2.2 -> 2.3.1
 * Update ru.vyarus.github-info 1.3.0 -> 1.4.0
 * Update ru.vyarus.quality 4.6.0 -> 4.8.0
 * Update com.github.ben-manes.versions 0.39.0 -> 0.44.0
 * Update et.researchgate.release 2.8.1 -> 3.0.2
+* Fix jitpack support
+* By default, release plugin assume main branch (setting for master commented)
+* Release process no longer perform full build (https://github.com/researchgate/gradle-release/issues/374)
 
 ### 3.0.3 (2021-10-27)
 * Update ru.vyarus.java-lib 2.2.1 -> 2.2.2 (disable publication option, support submodules without coverage)
