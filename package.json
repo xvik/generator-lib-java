@@ -36,7 +36,7 @@
   ],
   "dependencies": {
     "chalk": "4.1.1",
-    "yeoman-environment": "3.19.3",
+    "yeoman-environment": "6.1.0",
     "yo-java-helper": "2.2.0"
   },
   "devDependencies": {
